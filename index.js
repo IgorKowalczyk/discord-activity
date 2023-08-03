@@ -11,7 +11,7 @@ import { generateCard } from "./lib/generateCard.jsx";
 const port = parseInt(Deno.env.get("PORT") || 3000);
 const app = new Application();
 
-if (Deno.env.get("TOKEN")) throw new Error("Please provide a token!");
+if (!Deno.env.get("TOKEN")) throw new Error("Please provide a token!");
 
 const font = await Deno.readFile("./public/font.ttf");
 const fontBuffer = new Uint8Array(font).buffer;

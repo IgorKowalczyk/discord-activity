@@ -1,5 +1,4 @@
 /* eslint-disable complexity */
-import { load } from "https://deno.land/std/dotenv/mod.ts";
 import { Application, isHttpError, Router, send } from "https://deno.land/x/oak/mod.ts";
 import { createBot, Intents, startBot } from "https://deno.land/x/discordeno@13.0.0/mod.ts";
 import { enableCachePlugin } from "https://deno.land/x/discordeno@13.0.0/plugins/cache/mod.ts";
@@ -9,18 +8,17 @@ import { getIconCode } from "./lib/getEmoji.js";
 import { getUserData } from "./lib/getUserData.js";
 import { Logger } from "./lib/logger.js";
 import { generateCard } from "./lib/generateCard.jsx";
-const env = await load();
-const port = parseInt(env["PORT"] || 3000);
+const port = parseInt(Deno.env.get("PORT") || 3000);
 const app = new Application();
 
-if (!env["TOKEN"]) throw new Error("Please provide a token!");
+if (Deno.env.get("TOKEN")) throw new Error("Please provide a token!");
 
 const font = await Deno.readFile("./public/font.ttf");
 const fontBuffer = new Uint8Array(font).buffer;
 console.log(Logger("ready", `Loaded font! (${fontBuffer.byteLength} bytes)`));
 
 const client = createBot({
- token: env["TOKEN"],
+ token: Deno.env.get("TOKEN"),
  intents: Intents.Guilds | Intents.GuildMessages | Intents.GuildPresences,
  events: {
   ready() {

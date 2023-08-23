@@ -5,8 +5,9 @@ import satori, { init } from "https://esm.sh/satori@0.0.44/wasm";
 import initYoga from "https://esm.sh/yoga-wasm-web@0.2.0";
 
 const wasm = await fetch("https://esm.sh/yoga-wasm-web@0.2.0/dist/yoga.wasm").then((res) => res.arrayBuffer());
+const wasmBytes = new Uint8Array(wasm);
 
-const yoga = await (initYoga as unknown as (wasm: ArrayBuffer) => Promise<unknown>)(wasm);
+const yoga = await (initYoga as unknown as (wasm: Uint8Array) => Promise<unknown>)(wasmBytes);
 init(yoga);
 
 const availableStatuses: Record<string, string> = {

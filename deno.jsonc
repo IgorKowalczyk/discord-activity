@@ -1,16 +1,11 @@
 {
  "$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
  "tasks": {
-  "dev": "deno run --watch --allow-env --allow-net --allow-read index.js",
-  "start": "deno run --allow-env --allow-net --allow-read index.js",
+  "dev": "deno run --watch --allow-env --allow-net --allow-read index.ts",
+  "start": "deno run --allow-env --allow-net --allow-read index.ts",
   "fmt": "deno fmt",
   "fmt:check": "deno fmt --check",
   "lint": "deno lint"
- },
- "compilerOptions": {
-  "jsx": "react",
-  "jsxFactory": "h",
-  "jsxFragmentFactory": "Fragment"
  },
  "lint": {
   "include": ["."],

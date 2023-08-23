@@ -2,14 +2,14 @@
 import { Application, isHttpError, Router, send } from "https://deno.land/x/oak@v12.6.0/mod.ts";
 import { createBot, Intents, startBot } from "https://deno.land/x/discordeno@13.0.0/mod.ts";
 import { enableCachePlugin } from "https://deno.land/x/discordeno@13.0.0/plugins/cache/mod.ts";
-import { shortenText } from "./lib/shortenText.js";
 import isHexColor from "https://deno.land/x/deno_validator@v0.0.5/lib/isHexColor.ts";
-import { getIconCode } from "./lib/getEmoji.js";
-import { getUserData } from "./lib/getUserData.js";
-import { Logger } from "./lib/logger.js";
-import { generateCard } from "./lib/generateCard.jsx";
+import { getUserData } from "./lib/getUserData.ts";
+import { Logger } from "./lib/logger.ts";
+import { generateCard } from "./lib/generateCard.tsx";
+import type { DiscordActivity } from "https://deno.land/x/discordeno@13.0.0/types/mod.ts";
 import "https://deno.land/x/dotenv@v3.2.2/load.ts";
-const port = parseInt(Deno.env.get("PORT") || 3000);
+
+const port = parseInt(Deno.env.get("PORT") || "3000");
 const app = new Application();
 
 if (!Deno.env.get("TOKEN")) throw new Error("Please provide a token!");
@@ -19,7 +19,7 @@ const fontBuffer = new Uint8Array(font).buffer;
 console.log(Logger("ready", `Loaded font! (${fontBuffer.byteLength} bytes)`));
 
 const client = createBot({
- token: Deno.env.get("TOKEN"),
+ token: Deno.env.get("TOKEN") || "",
  intents: Intents.Guilds | Intents.GuildMessages | Intents.GuildPresences,
  events: {
   ready() {
@@ -28,6 +28,7 @@ const client = createBot({
  },
 });
 
+/* @ts-ignore */
 const cache = enableCachePlugin(client, {
  guilds: {
   enabled: true,
@@ -38,8 +39,9 @@ const cache = enableCachePlugin(client, {
 const router = new Router();
 
 router.get("/api/raw/:userId", async (context) => {
- const id = context.params.userId;
+ const id = context.params.userId as unknown as bigint;
  context.response.headers.set("Content-Type", "application/json");
+
  if (!id) {
   context.response.body = {
    error: "Please provide a user ID!",
@@ -47,7 +49,8 @@ router.get("/api/raw/:userId", async (context) => {
   };
   return (context.response.status = 400);
  }
- if (isNaN(id)) {
+
+ if (isNaN(parseInt(id.toString()))) {
   context.response.body = {
    error: "Please provide a valid user ID!",
    status: 400,
@@ -67,7 +70,7 @@ router.get("/api/raw/:userId", async (context) => {
 });
 
 router.get("/api/:userId", async (context) => {
- const id = context.params.userId;
+ const id = context.params.userId as unknown as bigint;
  const options = context.request.url.searchParams;
 
  if (!id) {
@@ -78,13 +81,14 @@ router.get("/api/:userId", async (context) => {
   return (context.response.status = 400);
  }
 
- if (isNaN(id)) {
+ if (isNaN(parseInt(id.toString()))) {
   context.response.body = {
    error: "Please provide a valid user ID!",
    status: 400,
   };
   return (context.response.status = 400);
  }
+
  const userData = await getUserData(client, id, cache);
 
  if (!userData) {
@@ -95,73 +99,52 @@ router.get("/api/:userId", async (context) => {
   return (context.response.status = 404);
  }
 
- const { activities, user } = userData || {};
+ if (userData.activities && userData.activities.length > 0) {
+  const nonStatusGames = userData.activities?.filter((activity) => activity.type !== 4) || [];
+  const activity = nonStatusGames.length > 0 ? { ...nonStatusGames[0] } : (null as DiscordActivity | null);
 
- const statusActivity = activities?.find((activity) => activity.type === 4) || null;
- const emoji = statusActivity?.emoji || {};
- let statusEmoji = null;
+  if (activity && activity.assets) {
+   if (activity.assets.large_image && typeof activity.assets.large_image === "string") {
+    activity.assets.large_image = activity.assets.large_image.startsWith("mp:external/") ? `https://media.discordapp.net/${activity.assets.large_image.replace("mp:", "")}` : activity.assets.large_image;
+    delete activity.assets.large_image;
+   }
 
- if (emoji && emoji.id) {
-  statusEmoji = `https://cdn.discordapp.com/emojis/${emoji.id}.${emoji.animated ? "gif" : "png"}`;
- } else if (emoji && emoji.name && typeof emoji.name === "string") {
-  statusEmoji = `https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/${getIconCode(emoji.name)}.png`;
+   if (activity.assets.small_image && typeof activity.assets.small_image === "string") {
+    activity.assets.small_image = activity.assets.small_image.startsWith("mp:external/") ? `https://media.discordapp.net/${activity.assets.small_image.replace("mp:", "")}` : activity.assets.small_image;
+    delete activity.assets.small_image;
+   }
+
+   userData.activities[0] = activity;
+  }
  }
 
- user.customStatus = {
-  state: shortenText(statusActivity?.state ?? ""),
-  image: statusEmoji,
- };
-
- const nonStatusGames = activities?.filter((activity) => activity.type !== 4) || [];
- const activity = nonStatusGames.length > 0 ? { ...nonStatusGames[0] } : {};
-
- if (activity && typeof activity === "object") {
-  activity.assets = activity.assets || {};
-  if (activity.largeImage && typeof activity.largeImage === "string") {
-   activity.assets.largeImage = activity.largeImage.startsWith("mp:external/") ? `https://media.discordapp.net/${activity.largeImage.replace("mp:", "")}` : activity.largeImage;
-   delete activity.largeImage;
-  }
-
-  if (activity.smallImage && typeof activity.smallImage === "string") {
-   activity.assets.smallImage = activity.smallImage.startsWith("mp:external/") ? `https://media.discordapp.net/${activity.smallImage.replace("mp:", "")}` : activity.smallImage;
-   delete activity.smallImage;
-  }
-
-  user.activity = activity;
- } else {
-  user.activity = null;
- }
-
- user.presence = userData.status;
-
- //context.response.headers.set("Content-Type", "image/svg+xml");
- context.response.headers.set("Content-Type", "text/html");
+ context.response.headers.set("Content-Type", "image/svg+xml");
  context.response.headers.set("Cache-Control", "public, max-age=3600");
 
- user.options = {
+ userData.options = {
   backgroundColor: "161a23",
   borderRadius: 10,
   idleMessage: "There is nothing going on here!",
   hideStatus: false,
  };
 
- if (options.get("bgcolor") && typeof options.get("bgcolor") === "string" && isHexColor(options.get("bgcolor"))) {
-  user.options.backgroundColor = options.get("bgcolor");
+ if (options.get("bgcolor") && typeof options.get("bgcolor") === "string" && isHexColor(options.get("bgcolor") as string)) {
+  userData.options.backgroundColor = options.get("bgcolor") as string;
  }
 
- if (options.get("borderRadius") && typeof options.get("borderRadius") === "string" && !isNaN(options.get("borderRadius"))) {
-  user.options.borderRadius = options.get("borderRadius");
+ if (options.get("borderRadius") && typeof options.get("borderRadius") === "string" && !isNaN(options.get("borderRadius") as unknown as number)) {
+  userData.options.borderRadius = options.get("borderRadius") as unknown as number;
  }
 
  if (options.get("idleMessage") && typeof options.get("idleMessage") === "string") {
-  user.options.idleMessage = options.get("idleMessage");
+  userData.options.idleMessage = options.get("idleMessage") as string;
  }
 
  if (options.get("hideStatus") && typeof options.get("hideStatus") === "string") {
-  user.options.hideStatus = options.get("hideStatus") === "true" ? true : false;
+  userData.options.hideStatus = options.get("hideStatus") === "true" ? true : false;
  }
 
- const image = await generateCard(user, fontBuffer);
+ const image = await generateCard(userData, fontBuffer);
 
  context.response.body = image;
 });
@@ -174,13 +157,11 @@ router.get("/badges/:file", async (context) => {
 });
 
 app.use(async (_ctx, next) => {
+ /* @ts-ignore */
  const start = _ctx[Symbol.for("request-received.startAt")] ? _ctx[Symbol.for("request-received.startAt")] : performance.now();
  await next();
  const delta = Math.round(performance.now() - start);
- console.log(Logger(
-  isHttpError(_ctx.response.status) ? "error" : "info",
-  `[${_ctx.response.status}] ${_ctx.request.method} ${_ctx.request.url.pathname} - ${delta}ms`,
- ));
+ console.log(Logger(isHttpError(_ctx.response.status) ? "error" : "info", `[${_ctx.response.status}] ${_ctx.request.method} ${_ctx.request.url.pathname} - ${delta}ms`));
 });
 
 app.use(async (context, next) => {

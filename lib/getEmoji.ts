@@ -1,7 +1,7 @@
 const U200D = String.fromCharCode(8205);
 const UFE0Fg = /\uFE0F/g;
 
-function toCodePoint(unicodeSurrogates) {
+function toCodePoint(unicodeSurrogates: string) {
  const r = [];
  let c = 0,
   p = 0,
@@ -21,6 +21,6 @@ function toCodePoint(unicodeSurrogates) {
  return r.join("-");
 }
 
-export function getIconCode(char) {
+export function getIconCode(char: string) {
  return toCodePoint(char.indexOf(U200D) < 0 ? char.replace(UFE0Fg, "") : char);
 }

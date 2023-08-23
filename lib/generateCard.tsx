@@ -1,8 +1,8 @@
 import { shortenText } from "./shortenText.ts";
 import type { User } from "./types.d.ts";
 import React from "https://esm.sh/react@18.2.0";
-import satori, { init } from "npm:satori@0.0.44/wasm";
-import initYoga from "npm:yoga-wasm-web@0.2.0";
+import satori, { init } from "https://esm.sh/satori@0.0.44/wasm";
+import initYoga from "https://esm.sh/yoga-wasm-web@0.2.0";
 import cacheDir from "https://deno.land/x/cache_dir@0.2.0/mod.ts";
 
 const wasm = await Deno.readFile(`${cacheDir()}/deno/npm/registry.npmjs.org/yoga-wasm-web/0.2.0/dist/yoga.wasm`);
@@ -141,155 +141,149 @@ export async function generateCard(user: User, fontBuffer: ArrayBufferLike) {
      marginTop: "12px",
     }}
    />
-   {user.activities && user.activities.length > 0
-    ? (
+   {user.activities && user.activities.length > 0 ? (
+    <div
+     style={{
+      display: "flex",
+      flexDirection: "column",
+      width: "100%",
+     }}
+    >
      <div
       style={{
        display: "flex",
        flexDirection: "column",
-       width: "100%",
+       fontSize: "1.15rem",
+       marginTop: "12px",
+       marginLeft: "12px",
+
+       fontWeight: 700,
+       color: "rgb(255, 255, 255)",
       }}
      >
       <div
        style={{
         display: "flex",
-        flexDirection: "column",
-        fontSize: "1.15rem",
-        marginTop: "12px",
-        marginLeft: "12px",
-
-        fontWeight: 700,
-        color: "rgb(255, 255, 255)",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "flex-start",
        }}
       >
-       <div
-        style={{
-         display: "flex",
-         flexDirection: "row",
-         alignItems: "center",
-         justifyContent: "flex-start",
-        }}
-       >
-        {user.activities[0].assets && (
-         <div
-          style={{
-           display: "flex",
-           position: "relative",
-           flexDirection: "column",
-           marginRight: "4px",
-          }}
-         >
-          {user.activities[0].assets.large_image
-           ? (
-            <img
-             style={{
-              borderRadius: "10px",
-             }}
-             src={user.activities[0].assets.large_image}
-             alt="discord"
-             width="82px"
-             height="82px"
-            />
-           )
-           : null}
-          {user.activities[0].assets.small_image
-           ? (
-            <img
-             style={{
-              borderRadius: "50%",
-              border: "2px solid #161a23",
-              backgroundColor: "#161a23",
-              position: "absolute",
-              bottom: "-4px",
-              right: "-4px",
-             }}
-             src={user.activities[0].assets.small_image}
-             alt="discord"
-             width="32px"
-             height="32px"
-            />
-           )
-           : null}
-         </div>
-        )}
+       {user.activities[0].assets && (
         <div
          style={{
           display: "flex",
+          position: "relative",
           flexDirection: "column",
-          alignItems: "flex-start",
-          justifyContent: "center",
+          marginRight: "4px",
          }}
         >
-         {user.activities[0].name && (
-          <span
+         {user.activities[0].assets.large_image ? (
+          <img
            style={{
-            display: "flex",
-            fontSize: "1.15rem",
-            fontWeight: 700,
-            color: "rgb(255, 255, 255)",
-            marginLeft: "8px",
+            borderRadius: "10px",
            }}
-          >
-           {user.activities[0].name}
-          </span>
-         )}
-
-         {user.activities[0].details && (
-          <span
+           src={user.activities[0].assets.large_image}
+           alt="discord"
+           width="82px"
+           height="82px"
+          />
+         ) : null}
+         {user.activities[0].assets.small_image ? (
+          <img
            style={{
-            display: "flex",
-            fontSize: "1.15rem",
-            fontWeight: 400,
-            color: "rgb(255, 255, 255)",
-            opacity: 0.5,
-            marginLeft: "8px",
+            borderRadius: "50%",
+            border: "2px solid #161a23",
+            backgroundColor: "#161a23",
+            position: "absolute",
+            bottom: "-4px",
+            right: "-4px",
            }}
-          >
-           {user.activities[0].details}
-          </span>
-         )}
-
-         {user.activities[0].state && (
-          <span
-           style={{
-            display: "flex",
-            fontSize: "1.15rem",
-            fontWeight: 400,
-            color: "rgb(255, 255, 255)",
-            opacity: 0.5,
-            marginLeft: "8px",
-           }}
-          >
-           {user.activities[0].state}
-          </span>
-         )}
+           src={user.activities[0].assets.small_image}
+           alt="discord"
+           width="32px"
+           height="32px"
+          />
+         ) : null}
         </div>
+       )}
+       <div
+        style={{
+         display: "flex",
+         flexDirection: "column",
+         alignItems: "flex-start",
+         justifyContent: "center",
+        }}
+       >
+        {user.activities[0].name && (
+         <span
+          style={{
+           display: "flex",
+           fontSize: "1.15rem",
+           fontWeight: 700,
+           color: "rgb(255, 255, 255)",
+           marginLeft: "8px",
+          }}
+         >
+          {user.activities[0].name}
+         </span>
+        )}
+
+        {user.activities[0].details && (
+         <span
+          style={{
+           display: "flex",
+           fontSize: "1.15rem",
+           fontWeight: 400,
+           color: "rgb(255, 255, 255)",
+           opacity: 0.5,
+           marginLeft: "8px",
+          }}
+         >
+          {user.activities[0].details}
+         </span>
+        )}
+
+        {user.activities[0].state && (
+         <span
+          style={{
+           display: "flex",
+           fontSize: "1.15rem",
+           fontWeight: 400,
+           color: "rgb(255, 255, 255)",
+           opacity: 0.5,
+           marginLeft: "8px",
+          }}
+         >
+          {user.activities[0].state}
+         </span>
+        )}
        </div>
       </div>
      </div>
-    )
-    : (
-     <div
+    </div>
+   ) : (
+    <div
+     style={{
+      display: "flex",
+      flexDirection: "column",
+      width: "100%",
+     }}
+    >
+     <span
       style={{
        display: "flex",
-       flexDirection: "column",
-       width: "100%",
+       fontSize: "1.15rem",
+       padding: "26px",
+       fontWeight: 400,
+       color: "rgb(255, 255, 255)",
+       opacity: 0.5,
       }}
      >
-      <span
-       style={{
-        display: "flex",
-        fontSize: "1.15rem",
-        padding: "26px",
-        fontWeight: 400,
-        color: "rgb(255, 255, 255)",
-        opacity: 0.5,
-       }}
-      >
-       {shortenText(user.options.idleMessage, 32)}
-      </span>
-     </div>
-    )}
+      {shortenText(user.options.idleMessage, 32)}
+     </span>
+    </div>
+   )}
   </div>,
   {
    fonts: [
@@ -298,7 +292,7 @@ export async function generateCard(user: User, fontBuffer: ArrayBufferLike) {
      data: fontBuffer,
     },
    ],
-  },
+  }
  );
 
  return image;

@@ -1,13 +1,14 @@
 /* eslint-disable complexity */
-import { Application, isHttpError, Router, send } from "https://deno.land/x/oak/mod.ts";
+import { Application, isHttpError, Router, send } from "https://deno.land/x/oak@v12.6.0/mod.ts";
 import { createBot, Intents, startBot } from "https://deno.land/x/discordeno@13.0.0/mod.ts";
 import { enableCachePlugin } from "https://deno.land/x/discordeno@13.0.0/plugins/cache/mod.ts";
 import { shortenText } from "./lib/shortenText.js";
-import isHexColor from "https://deno.land/x/deno_validator/lib/isHexColor.ts";
+import isHexColor from "https://deno.land/x/deno_validator@v0.0.5/lib/isHexColor.ts";
 import { getIconCode } from "./lib/getEmoji.js";
 import { getUserData } from "./lib/getUserData.js";
 import { Logger } from "./lib/logger.js";
 import { generateCard } from "./lib/generateCard.jsx";
+import "https://deno.land/x/dotenv@v3.2.2/load.ts";
 const port = parseInt(Deno.env.get("PORT") || 3000);
 const app = new Application();
 
@@ -133,7 +134,8 @@ router.get("/api/:userId", async (context) => {
 
  user.presence = userData.status;
 
- context.response.headers.set("Content-Type", "image/svg+xml");
+ //context.response.headers.set("Content-Type", "image/svg+xml");
+ context.response.headers.set("Content-Type", "text/html");
  context.response.headers.set("Cache-Control", "public, max-age=3600");
 
  user.options = {

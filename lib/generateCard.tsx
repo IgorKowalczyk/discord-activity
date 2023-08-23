@@ -3,11 +3,10 @@ import type { User } from "./types.d.ts";
 import React from "https://esm.sh/react@18.2.0";
 import satori, { init } from "https://esm.sh/satori@0.0.44/wasm";
 import initYoga from "https://esm.sh/yoga-wasm-web@0.2.0";
-import cacheDir from "https://deno.land/x/cache_dir@0.2.0/mod.ts";
 
-const wasm = await Deno.readFile(`${cacheDir()}/deno/npm/registry.npmjs.org/yoga-wasm-web/0.2.0/dist/yoga.wasm`);
+const wasm = await fetch("https://esm.sh/yoga-wasm-web@0.2.0/dist/yoga.wasm").then((res) => res.arrayBuffer());
 
-const yoga = await (initYoga as unknown as (wasm: Uint8Array) => Promise<unknown>)(wasm);
+const yoga = await (initYoga as unknown as (wasm: ArrayBuffer) => Promise<unknown>)(wasm);
 init(yoga);
 
 const availableStatuses: Record<string, string> = {

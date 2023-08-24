@@ -89,7 +89,6 @@ export async function getUserData(client: Bot, id: bigint, cache: BotWithCache):
  }
 
  if (userPresences && userPresences.activities) {
-  console.log(userData.activities);
   const statusActivity = userPresences.activities.find((activity) => activity.type === 4) || null;
 
   if (statusActivity && statusActivity.state) {

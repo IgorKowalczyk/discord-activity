@@ -1,8 +1,9 @@
+import React from "https://esm.sh/react@18.2.0";
 import { shortenText } from "./shortenText.ts";
 import type { User } from "./types.d.ts";
-import React from "https://esm.sh/react@18.2.0";
 import satori, { init } from "https://esm.sh/satori@0.0.44/wasm";
 import initYoga from "https://esm.sh/yoga-wasm-web@0.2.0";
+import { h } from "https://deno.land/x/jsx_to_string@v0.5.0/mod.ts";
 
 const wasm = await fetch("https://esm.sh/yoga-wasm-web@0.2.0/dist/yoga.wasm").then((res) => res.arrayBuffer());
 const wasmBytes = new Uint8Array(wasm);
@@ -109,26 +110,28 @@ export async function generateCard(user: User, fontBuffer: ArrayBufferLike) {
         );
        })}
      </span>
-     <div
-      style={{
-       display: "flex",
-       width: "100%",
-       flexDirection: "row",
-       alignItems: "center",
-      }}
-     >
-      {user.customStatus.image ? <img src={user.customStatus.image} alt="emoji" width="16" height="16" /> : <div style={{ display: "flex" }} />}
-      <span
+     {user.customStatus && user.customStatus.state && user.customStatus.image && (
+      <div
        style={{
         display: "flex",
-        opacity: 0.5,
-        paddingLeft: user.customStatus.image ? "4px" : "0px",
-        color: "rgb(255, 255, 255)",
+        width: "100%",
+        flexDirection: "row",
+        alignItems: "center",
        }}
       >
-       {user.customStatus.state}
-      </span>
-     </div>
+       {user.customStatus.image ? <img src={user.customStatus.image} alt="emoji" width="16" height="16" /> : <div style={{ display: "flex" }} />}
+       <span
+        style={{
+         display: "flex",
+         opacity: 0.5,
+         paddingLeft: user.customStatus.image ? "4px" : "0px",
+         color: "rgb(255, 255, 255)",
+        }}
+       >
+        {shortenText(user.customStatus.state, 32)}
+       </span>
+      </div>
+     )}
     </div>
    </div>
    <div
@@ -169,44 +172,43 @@ export async function generateCard(user: User, fontBuffer: ArrayBufferLike) {
         justifyContent: "flex-start",
        }}
       >
-       {user.activities[0].assets && (
-        <div
-         style={{
-          display: "flex",
-          position: "relative",
-          flexDirection: "column",
-          marginRight: "4px",
-         }}
-        >
-         {user.activities[0].assets.large_image ? (
-          <img
-           style={{
-            borderRadius: "10px",
-           }}
-           src={user.activities[0].assets.large_image}
-           alt="discord"
-           width="82px"
-           height="82px"
-          />
-         ) : null}
-         {user.activities[0].assets.small_image ? (
-          <img
-           style={{
-            borderRadius: "50%",
-            border: "2px solid #161a23",
-            backgroundColor: "#161a23",
-            position: "absolute",
-            bottom: "-4px",
-            right: "-4px",
-           }}
-           src={user.activities[0].assets.small_image}
-           alt="discord"
-           width="32px"
-           height="32px"
-          />
-         ) : null}
-        </div>
-       )}
+       <div
+        style={{
+         display: "flex",
+         position: "relative",
+         flexDirection: "column",
+         marginRight: "4px",
+        }}
+       >
+        {user.activities[0].largeImage ? (
+         <img
+          style={{
+           borderRadius: "10px",
+          }}
+          src={user.activities[0].largeImage}
+          alt="discord"
+          width="82px"
+          height="82px"
+         />
+        ) : null}
+        {user.activities[0].smallImage ? (
+         <img
+          style={{
+           borderRadius: "50%",
+           border: "2px solid #161a23",
+           backgroundColor: "#161a23",
+           position: "absolute",
+           bottom: "-4px",
+           right: "-4px",
+          }}
+          src={user.activities[0].smallImage}
+          alt="discord"
+          width="32px"
+          height="32px"
+         />
+        ) : null}
+       </div>
+
        <div
         style={{
          display: "flex",

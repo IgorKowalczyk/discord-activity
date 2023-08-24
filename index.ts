@@ -6,7 +6,6 @@ import isHexColor from "https://deno.land/x/deno_validator@v0.0.5/lib/isHexColor
 import { getUserData } from "./lib/getUserData.ts";
 import { Logger } from "./lib/logger.ts";
 import { generateCard } from "./lib/generateCard.tsx";
-import type { DiscordActivity } from "https://deno.land/x/discordeno@13.0.0/types/mod.ts";
 import "https://deno.land/x/dotenv@v3.2.2/load.ts";
 
 const port = parseInt(Deno.env.get("PORT") || "3000");
@@ -100,21 +99,21 @@ router.get("/api/:userId", async (context) => {
  }
 
  if (userData.activities && userData.activities.length > 0) {
-  const nonStatusGames = userData.activities?.filter((activity) => activity.type !== 4) || [];
-  const activity = nonStatusGames.length > 0 ? { ...nonStatusGames[0] } : (null as DiscordActivity | null);
+  const nonStatusGames = userData.activities.filter((activity) => activity.type !== 4) || [];
+  const activity = nonStatusGames.length > 0 ? { ...nonStatusGames[0] } : null;
 
-  if (activity && activity.assets) {
-   if (activity.assets.large_image && typeof activity.assets.large_image === "string") {
-    activity.assets.large_image = activity.assets.large_image.startsWith("mp:external/") ? `https://media.discordapp.net/${activity.assets.large_image.replace("mp:", "")}` : activity.assets.large_image;
-    delete activity.assets.large_image;
+  userData.activities = [];
+
+  if (activity) {
+   if (activity.largeImage && typeof activity.largeImage === "string") {
+    activity.largeImage = activity.largeImage.startsWith("mp:external/") ? `https://media.discordapp.net/${activity.largeImage.replace("mp:", "")}` : activity.largeImage;
    }
 
-   if (activity.assets.small_image && typeof activity.assets.small_image === "string") {
-    activity.assets.small_image = activity.assets.small_image.startsWith("mp:external/") ? `https://media.discordapp.net/${activity.assets.small_image.replace("mp:", "")}` : activity.assets.small_image;
-    delete activity.assets.small_image;
+   if (activity.smallImage && typeof activity.smallImage === "string") {
+    activity.smallImage = activity.smallImage.startsWith("mp:external/") ? `https://media.discordapp.net/${activity.smallImage.replace("mp:", "")}` : activity.smallImage;
    }
 
-   userData.activities[0] = activity;
+   userData.activities.push(activity);
   }
  }
 

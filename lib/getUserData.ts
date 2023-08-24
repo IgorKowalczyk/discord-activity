@@ -1,10 +1,9 @@
 import type { User } from "./types.d.ts";
 import type { Bot } from "https://deno.land/x/discordeno@13.0.0/bot.ts";
 import type { BotWithCache } from "https://deno.land/x/discordeno@13.0.0/plugins/cache/mod.ts";
-import { shortenText } from "./shortenText.ts";
 import { getIconCode } from "./getEmoji.ts";
 
-/* @ts-ignore */
+/* @ts-ignore BigInt cannot convert to json */
 BigInt.prototype.toJSON = function () {
  return this.toString();
 };
@@ -75,50 +74,52 @@ export async function getUserData(client: Bot, id: bigint, cache: BotWithCache):
 
  let avatar;
  let avatarType;
+ let statusEmoji = null;
+ let statusState = null;
 
  if (userData.avatar) {
-  /* @ts-ignore */
-  avatarType = userData.avatar.toString(16).startsWith("a") ? "gif" : "png";
-  /* @ts-ignore */
-  const avatarHash = userData.avatar.toString(16).startsWith("a") ? "a_" + userData.avatar.toString(16).slice(1) : userData.avatar.toString(16).slice(1);
+  // @ts-ignore toString(16) expected 0 arguments but got 1
+  const hex = userData.avatar.toString(16);
+  avatarType = hex.startsWith("a") ? "gif" : "png";
+  const avatarHash = hex.startsWith("a") ? `a_${hex.slice(1)}` : hex.slice(1);
   avatar = userData.avatar ? `https://cdn.discordapp.com/avatars/${userData.id}/${avatarHash}.${avatarHash ? "gif" : "png"}` : `https://cdn.discordapp.com/embed/avatars/${+userData.discriminator % 5}.png`;
  } else {
   avatarType = "png";
   avatar = `https://cdn.discordapp.com/embed/avatars/${+userData.discriminator % 5}.png`;
  }
 
- const statusActivity = userData.activities?.find((activity) => activity.type === 4) || null;
- const emoji = statusActivity?.emoji || null;
- let statusEmoji = null;
+ if (userPresences && userPresences.activities) {
+  console.log(userData.activities);
+  const statusActivity = userPresences.activities.find((activity) => activity.type === 4) || null;
 
- if (emoji && emoji.id) {
-  statusEmoji = `https://cdn.discordapp.com/emojis/${emoji.id}.${emoji.animated ? "gif" : "png"}`;
- } else if (emoji && emoji.name && typeof emoji.name === "string") {
-  statusEmoji = `https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/${getIconCode(emoji.name)}.png`;
+  if (statusActivity && statusActivity.state) {
+   statusState = statusActivity.state;
+  }
+
+  if (statusActivity && statusActivity.emoji && statusActivity.emoji.id) {
+   statusEmoji = `https://cdn.discordapp.com/emojis/${statusActivity.emoji.id}.${statusActivity.emoji.animated ? "gif" : "png"}`;
+  } else if (statusActivity && statusActivity.emoji && statusActivity.emoji.name && typeof statusActivity.emoji.name === "string") {
+   statusEmoji = `https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/${getIconCode(statusActivity.emoji.name)}.png`;
+  }
  }
 
  return {
   bot: userData.bot,
-  activities: userPresences && userPresences.activities,
+  activities: userPresences?.activities,
   customStatus: {
-   state: shortenText(statusActivity?.state ?? ""),
    image: statusEmoji,
+   state: statusState,
   },
   status: {
-   desktop: userPresences && userPresences?.desktop,
-   mobile: userPresences && userPresences?.mobile,
-   web: userPresences && userPresences?.web,
+   desktop: userPresences?.desktop,
+   mobile: userPresences?.mobile,
+   web: userPresences?.web,
   },
-  id: userData.id,
+  id: BigInt(userData.id),
   username: userData.username,
   discriminator: userData.discriminator,
   avatar: avatar,
-  tag: userData.tag,
-  createdAt: userData.createdAt,
-  joinedAt: userData.joinedAt,
-  premiumSince: userData.premiumSince,
-  premiumSinceTimestamp: userData.premiumSinceTimestamp,
   publicFlags: userData.publicFlags,
   badges: calculateBadges(userData.publicFlags, avatarType),
- };
+ } as User;
 }

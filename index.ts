@@ -39,6 +39,7 @@ const router = new Router();
 
 router.get("/api/raw/:userId", async (context) => {
  const id = context.params.userId as unknown as bigint;
+
  context.response.headers.set("Content-Type", "application/json");
 
  if (!id) {
@@ -98,6 +99,8 @@ router.get("/api/:userId", async (context) => {
   return (context.response.status = 404);
  }
 
+ context.response.headers.set("Content-Type", "image/svg+xml");
+
  if (userData.activities && userData.activities.length > 0) {
   const nonStatusGames = userData.activities.filter((activity) => activity.type !== 4) || [];
   const activity = nonStatusGames.length > 0 ? { ...nonStatusGames[0] } : null;
@@ -116,9 +119,6 @@ router.get("/api/:userId", async (context) => {
    userData.activities.push(activity);
   }
  }
-
- context.response.headers.set("Content-Type", "image/svg+xml");
- context.response.headers.set("Cache-Control", "public, max-age=3600");
 
  userData.options = {
   backgroundColor: "161a23",
@@ -167,7 +167,10 @@ app.use(async (context, next) => {
  context.response.headers.set("Access-Control-Allow-Origin", "*");
  context.response.headers.set("Access-Control-Allow-Methods", "GET");
  context.response.headers.set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
- context.response.headers.set("Access-Control-Max-Age", "1800");
+ context.response.headers.set("Access-Control-Max-Age", "0");
+ context.response.headers.set("Cache-Control", "no-cache, no-store, must-revalidate");
+ context.response.headers.set("Pragma", "no-cache");
+ context.response.headers.set("Expires", "0");
  context.response.headers.set("X-Content-Type-Options", "nosniff");
  context.response.headers.set("X-Frame-Options", "DENY");
  context.response.headers.set("X-XSS-Protection", "1; mode=block");

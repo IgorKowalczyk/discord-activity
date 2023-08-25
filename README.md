@@ -10,11 +10,15 @@
  <a aria-label="Version" href="https://github.com/igorkowalczyk/discord-activity/releases">
   <img src="https://img.shields.io/github/v/release/igorkowalczyk/discord-activity?color=blue&logo=github&label=Version"/>
  </a>
+  <br/>
+ <b>🦕 This is a <a href="https://deno.com">Deno runtime</a> app that generates user cards for Discord users, showcasing their presence and activities. The application integrates with the Discord API using the <a href="https://deno.land/x/discordeno">Discordeno</a> library and serves user card images as SVG using <a href="https://github.com/vercel/satori">Satori</a>.</b>
 </div>
 
 ---
 
-🦕 This is a [Deno runtime](https://deno.com) app that generates user cards for Discord users, showcasing their presence and activities. The application integrates with the Discord API using the [Discordeno](https://deno.land/x/discordeno) library and serves user card images as SVG using [Satori](https://github.com/vercel/satori).
+## 📷 How it looks
+
+![Example image](https://github.com/IgorKowalczyk/discord-activity/assets/49127376/d617abbb-aa2d-4e72-aa80-01c8b9e0c3a3)
 
 ## ✨ Features
 
@@ -78,6 +82,8 @@ hideStatus: true
 ```
 
 **Result**
+
+![Generated Image](https://github.com/IgorKowalczyk/discord-activity/assets/49127376/173e9df3-b472-4018-96ca-92e0576b30e1)
 
 ## 🔩 Self Hosting
 

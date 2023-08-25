@@ -20,6 +20,9 @@
 
 ![Example image](https://github.com/IgorKowalczyk/discord-activity/assets/49127376/d617abbb-aa2d-4e72-aa80-01c8b9e0c3a3)
 
+> [!IMPORTANT]
+> Current Nitro & Boosting badges do not work due to Discord API limitations, unless you currently have an animated avatar then the Nitro badge will be displayed correctly.
+
 ## ✨ Features
 
 - Generate user cards with user presence and activities.
@@ -47,7 +50,7 @@ Then, in your browser, **go to `https://discord-activity.deno.dev/api/:userId` a
 ## 📚 API Endpoints
 
 - `/api/:userId`: Generate a user card image with customizable appearance.
-- /api/raw/:userId`: Get raw user data in JSON format.
+- `/api/raw/:userId`: Get raw user data in JSON format.
 
 ## 🎨 Customizations
 
@@ -61,8 +64,8 @@ Then, in your browser, **go to `https://discord-activity.deno.dev/api/:userId` a
 | `idleMessage`  | Message to display when the user is idle. | `There is nothing going on here!` |
 | `hideStatus`   | Hide the status of the user.              | `false`                           |
 
-> [!IMPORTANT]
-> Current Nitro & Boosting badges do not work due to Discord API limitations, unless you currently have an animated avatar then the Nitro badge will be displayed correctly.
+> [!WARNING]
+> The `bgColor` parameter must be a hexadecimal color code without the `#` symbol. For example, `#161a23` should be `161a23`.
 
 #### 🚀 Example
 

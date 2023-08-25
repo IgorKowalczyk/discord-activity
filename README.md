@@ -45,36 +45,6 @@ Then, in your browser, **go to `https://discord-activity.deno.dev/api/:userId` a
 - `/api/:userId`: Generate a user card image with customizable appearance.
 - /api/raw/:userId`: Get raw user data in JSON format.
 
-## 🎨 Customizations
-
-> [!NOTE]
-> You can customize the appearance of the user card by providing query parameters to the `/api/:userId` endpoint.
-
-| Parameter         | Description                               | Default                           |
-| ----------------- | ----------------------------------------- | --------------------------------- |
-| `backgroundColor` | Background color of the user card.        | `#161a23`                         |
-| `borderRadius`    | Border radius of the user card.           | `10`                              |
-| `idleMessage`     | Message to display when the user is idle. | `There is nothing going on here!` |
-| `hideStatus`      | Hide the status of the user.              | `false`                           |
-
-> [!IMPORTANT]
-> Current Nitro & Boosting badges do not work due to Discord API limitations, unless you currently have an animated avatar then the Nitro badge will be displayed correctly.
-
-#### 🚀 Example
-
-```http
-GET https://discord-activity.deno.dev/api/544164729354977282?backgroundColor=2f3341&borderRadius=0&idleMessage=I'm not doing anything&hideStatus=true
-```
-
-```
-backgroundColor: 2f3341
-borderRadius: 0
-idleMessage`: `I'm not doing anything`
-hideStatus`: true
-```
-
-![Example Image](https://github.com/IgorKowalczyk/discord-activity/assets/49127376/f1040fcc-be0d-4d95-80c7-2af2a1660b7a)
-
 ## 🔩 Self Hosting
 
 1. Clone [this repository](https://github.com/igorkowalczyk/discord-activity) `git clone https://github.com/IgorKowalczyk/discord-activity`

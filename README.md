@@ -77,9 +77,6 @@ idleMessage: "I'm not doing anything"
 hideStatus: true
 ```
 
-**Result**
-![Example Image](https://github.com/IgorKowalczyk/discord-activity/assets/49127376/f1040fcc-be0d-4d95-80c7-2af2a1660b7a)
-
 ## 🔩 Self Hosting
 
 1. Clone [this repository](https://github.com/igorkowalczyk/discord-activity) `git clone https://github.com/IgorKowalczyk/discord-activity`

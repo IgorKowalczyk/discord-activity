@@ -1,17 +1,5 @@
 ![Discord Activity](https://github.com/IgorKowalczyk/discord-activity/assets/49127376/6e6cbe6e-22f8-4190-aabf-e4e0f9c213be)
 
-<div align="center">
- <a aria-label="Powered by" href="https://deno.com">
-  <img src="https://img.shields.io/static/v1?label=Powered%20by&message=Deno&color=blue&logo=deno"/>
- </a>
- <a aria-label="Github License" href="https://github.com/igorkowalczyk/discord-activity/blob/main/license.md">
-  <img src="https://img.shields.io/github/license/igorkowalczyk/discord-activity?color=blue&logo=github&label=License"/>
- </a>
- <a aria-label="Version" href="https://github.com/igorkowalczyk/discord-activity/releases">
-  <img src="https://img.shields.io/github/v/release/igorkowalczyk/discord-activity?color=blue&logo=github&label=Version"/>
- </a>
-</div>
-
 ---
 
 🦕 This is a [Deno runtime](https://deno.com) app that generates user cards for Discord users, showcasing their presence and activities. The application integrates with the Discord API using the [Discordeno](https://deno.land/x/discordeno) library and serves user card images as SVG using [Satori](https://github.com/vercel/satori).

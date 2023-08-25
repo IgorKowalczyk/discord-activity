@@ -50,12 +50,12 @@ Then, in your browser, **go to `https://discord-activity.deno.dev/api/:userId` a
 > [!NOTE]
 > You can customize the appearance of the user card by providing query parameters to the `/api/:userId` endpoint.
 
-| Parameter         | Description                               | Default                           |
-| ----------------- | ----------------------------------------- | --------------------------------- |
-| `backgroundColor` | Background color of the user card.        | `#161a23`                         |
-| `borderRadius`    | Border radius of the user card.           | `10`                              |
-| `idleMessage`     | Message to display when the user is idle. | `There is nothing going on here!` |
-| `hideStatus`      | Hide the status of the user.              | `false`                           |
+| Parameter      | Description                               | Default                           |
+| -------------- | ----------------------------------------- | --------------------------------- |
+| `bgColor`      | Background color of the user card.        | `#161a23`                         |
+| `borderRadius` | Border radius of the user card.           | `10`                              |
+| `idleMessage`  | Message to display when the user is idle. | `There is nothing going on here!` |
+| `hideStatus`   | Hide the status of the user.              | `false`                           |
 
 > [!IMPORTANT]
 > Current Nitro & Boosting badges do not work due to Discord API limitations, unless you currently have an animated avatar then the Nitro badge will be displayed correctly.
@@ -65,17 +65,19 @@ Then, in your browser, **go to `https://discord-activity.deno.dev/api/:userId` a
 **URL**
 
 ```http
-GET https://discord-activity.deno.dev/api/544164729354977282?backgroundColor=2f3341&borderRadius=0&idleMessage=I'm not doing anything&hideStatus=true
+GET https://discord-activity.deno.dev/api/544164729354977282?bgColor=2f3341&borderRadius=0&idleMessage=I'm not doing anything&hideStatus=true
 ```
 
 **Query Parameters**
 
 ```yaml
-backgroundColor: "2f3341"
+bgColor: "2f3341"
 borderRadius: 0
 idleMessage: "I'm not doing anything"
 hideStatus: true
 ```
+
+**Result**
 
 ## 🔩 Self Hosting
 

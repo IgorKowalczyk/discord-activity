@@ -127,8 +127,8 @@ router.get("/api/:userId", async (context) => {
   hideStatus: false,
  };
 
- if (options.get("bgcolor") && typeof options.get("bgcolor") === "string" && isHexColor(options.get("bgcolor") as string)) {
-  userData.options.backgroundColor = options.get("bgcolor") as string;
+ if (options.get("bgColor") && typeof options.get("bgColor") === "string" && isHexColor("#" + options.get("bgColor"))) {
+  userData.options.backgroundColor = ("#" + options.get("bgColor")) as string;
  }
 
  if (options.get("borderRadius") && typeof options.get("borderRadius") === "string" && !isNaN(options.get("borderRadius") as unknown as number)) {

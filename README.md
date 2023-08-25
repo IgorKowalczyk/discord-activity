@@ -64,7 +64,7 @@ Then, in your browser, **go to `https://discord-activity.deno.dev/api/:userId` a
 
 **URL**
 
-```bash
+```http
 GET https://discord-activity.deno.dev/api/544164729354977282?backgroundColor=2f3341&borderRadius=0&idleMessage=I'm not doing anything&hideStatus=true
 ```
 

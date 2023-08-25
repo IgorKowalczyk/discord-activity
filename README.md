@@ -36,9 +36,7 @@ Then, in your browser, **go to `https://discord-activity.deno.dev/api/:userId` a
 **You will be shown a user card with your presence and activities.** If you want to customize the appearance of the user card, you can do so by providing query parameters to the URL which are described in the [Customizations](#-customizations) section.
 
 > [!NOTE]
-> If you don't know your Discord user ID, go to your Discord settings, then to the "Advanced" tab, scroll down and enable "Developer Mode". Then right-click on your profile and click "Copy ID".
->
-> You can also get raw user data in JSON format by going to `https://discord-activity.deno.dev/api/raw/:userId` and replacing `:userId` with your Discord user ID.
+> If you don't know your Discord user ID, go to your Discord settings, then to the "Advanced" tab, scroll down and enable "Developer Mode". Then right-click on your profile and click "Copy ID". You can also get raw user data in JSON format by going to `https://discord-activity.deno.dev/api/raw/:userId` and replacing `:userId` with your Discord user ID.
 
 ## 📚 API Endpoints
 

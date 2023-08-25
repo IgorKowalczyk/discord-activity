@@ -60,6 +60,26 @@ Then, in your browser, **go to `https://discord-activity.deno.dev/api/:userId` a
 > [!IMPORTANT]
 > Current Nitro & Boosting badges do not work due to Discord API limitations, unless you currently have an animated avatar then the Nitro badge will be displayed correctly.
 
+#### 🚀 Example
+
+**URL**
+
+```bash
+GET https://discord-activity.deno.dev/api/544164729354977282?backgroundColor=2f3341&borderRadius=0&idleMessage=I'm not doing anything&hideStatus=true
+```
+
+**Query Parameters**
+
+```yaml
+backgroundColor: "2f3341"
+borderRadius: 0
+idleMessage: "I'm not doing anything"
+hideStatus: true
+```
+
+**Result**
+![Example Image](https://github.com/IgorKowalczyk/discord-activity/assets/49127376/f1040fcc-be0d-4d95-80c7-2af2a1660b7a)
+
 ## 🔩 Self Hosting
 
 1. Clone [this repository](https://github.com/igorkowalczyk/discord-activity) `git clone https://github.com/IgorKowalczyk/discord-activity`

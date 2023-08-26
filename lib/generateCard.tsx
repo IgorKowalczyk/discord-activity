@@ -18,7 +18,7 @@ const availableStatuses: Record<string, string> = {
  offline: "#747F8D",
 };
 
-export async function generateCard(user: User, fontBuffer: ArrayBufferLike) {
+export async function generateCard(user: User, fontBuffer: ArrayBufferLike): Promise<string> {
  const image = await satori(
   <div
    style={{
@@ -310,7 +310,7 @@ export async function generateCard(user: User, fontBuffer: ArrayBufferLike) {
  return image;
 }
 
-export async function generateErrorCard(fontBuffer: ArrayBufferLike, error?: string) {
+export async function generateErrorCard(fontBuffer: ArrayBufferLike, error?: string): Promise<string> {
  const image = await satori(
   <div
    style={{

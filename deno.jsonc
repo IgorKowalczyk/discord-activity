@@ -5,7 +5,8 @@
   "start": "deno run --allow-env --allow-net --allow-read index.ts",
   "fmt": "deno fmt",
   "fmt:check": "deno fmt --check",
-  "lint": "deno lint"
+  "lint": "deno lint",
+  "check": "deno check ./*.ts"
  },
  "compilerOptions": {
   "jsx": "react",

@@ -18,7 +18,7 @@ console.log(Logger("ready", `Loaded font! (${fontBuffer.byteLength} bytes)`));
 
 const client = createBot({
  token: Deno.env.get("TOKEN") || "",
- intents: Intents.Guilds | Intents.GuildMessages | Intents.GuildPresences,
+ intents: Intents.Guilds | Intents.GuildPresences,
  events: {
   ready() {
    console.log(Logger("ready", `Connected to Discord gateway!`));

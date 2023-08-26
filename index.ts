@@ -36,6 +36,10 @@ const cache = enableCachePlugin(client, {
 
 const router = new Router();
 
+router.get("/", (context) => {
+ context.response.redirect("https://github.com/igorkowalczyk/discord-activity");
+});
+
 router.get("/api/raw/:userId", async (context) => {
  const id = context.params.userId as unknown as bigint;
 

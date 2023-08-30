@@ -125,7 +125,7 @@ router.get("/api/:userId", async (context) => {
   }
 
   userData.options = {
-   backgroundColor: "161a23",
+   backgroundColor: "#161a23",
    borderRadius: 10,
    idleMessage: "There is nothing going on here!",
    hideStatus: false,

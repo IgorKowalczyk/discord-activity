@@ -24,7 +24,7 @@ export async function generateCard(user: User, fontBuffer: ArrayBufferLike): Pro
    style={{
     width: "100%",
     display: "flex",
-    backgroundColor: "#" + user.options.backgroundColor,
+    backgroundColor: user.options.backgroundColor,
     borderRadius: user.options.borderRadius + "px",
     flexDirection: "column",
     padding: "12px",

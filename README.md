@@ -72,13 +72,13 @@ Then, in your browser, **go to `https://discord-activity.deno.dev/api/:userId` a
 **URL**
 
 ```http
-GET https://discord-activity.deno.dev/api/544164729354977282?bgColor=2f3341&borderRadius=0&idleMessage=I'm not doing anything&hideStatus=true
+GET https://discord-activity.deno.dev/api/544164729354977282?bgColor=1b1c1e&borderRadius=0&idleMessage=I'm not doing anything&hideStatus=true
 ```
 
 **Query Parameters**
 
 ```yaml
-bgColor: "2f3341"
+bgColor: "1b1c1e"
 borderRadius: 0
 idleMessage: "I'm not doing anything"
 hideStatus: true
@@ -86,7 +86,7 @@ hideStatus: true
 
 **Result**
 
-![Generated Image](https://github.com/IgorKowalczyk/discord-activity/assets/49127376/173e9df3-b472-4018-96ca-92e0576b30e1)
+![Generated Image](https://github.com/IgorKowalczyk/discord-activity/assets/49127376/b2dda27f-24fe-4641-99d6-bff3f53bb2f5)
 
 ## 🔩 Self Hosting
 

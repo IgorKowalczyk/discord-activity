@@ -8,11 +8,6 @@
   "lint": "deno lint",
   "check": "deno check ./*.ts"
  },
- "compilerOptions": {
-  "jsx": "react",
-  "jsxFactory": "h",
-  "jsxFragmentFactory": "Fragment"
- },
  "lint": {
   "include": ["."],
   "rules": {

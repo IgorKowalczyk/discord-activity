@@ -3,7 +3,7 @@ import { shortenText } from "./shortenText.ts";
 import type { User } from "./types.d.ts";
 import satori, { init } from "https://esm.sh/satori@0.0.44/wasm";
 import initYoga from "https://esm.sh/yoga-wasm-web@0.2.0";
-import { h } from "https://deno.land/x/jsx_to_string@v0.5.0/mod.ts";
+import { h } from "https://esm.sh/preact@10.18.1";
 
 const wasm = await fetch("https://esm.sh/yoga-wasm-web@0.2.0/dist/yoga.wasm").then((res) => res.arrayBuffer());
 const wasmBytes = new Uint8Array(wasm);

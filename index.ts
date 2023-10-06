@@ -154,8 +154,9 @@ app.get("/api/:userCardId", async (context) => {
 
   const image = await generateCard(userData, fontBuffer);
   return context.body(image);
- } catch (_err) {
+ } catch (err) {
   const card = await generateErrorCard(fontBuffer);
+  Logger("error", err);
   context.status(500);
   context.header("Content-Type", "image/svg+xml");
   return context.body(card);
@@ -171,5 +172,5 @@ Deno.serve(
    Logger("ready", `Listening on: http://${hostname ?? "localhost"}:${port}`);
   },
  },
- app.fetch,
+ app.fetch
 );

@@ -172,5 +172,5 @@ Deno.serve(
    Logger("ready", `Listening on: http://${hostname ?? "localhost"}:${port}`);
   },
  },
- app.fetch
+ app.fetch,
 );

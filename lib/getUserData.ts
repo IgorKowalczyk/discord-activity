@@ -82,7 +82,7 @@ export async function getUserData(client: Bot, id: bigint, cache: BotWithCache):
   const hex = userData.avatar.toString(16);
   avatarType = hex.startsWith("a") ? "gif" : "png";
   const avatarHash = hex.startsWith("a") ? `a_${hex.slice(1)}` : hex.slice(1);
-  avatar = userData.avatar ? `https://cdn.discordapp.com/avatars/${userData.id}/${avatarHash}.${avatarHash ? "gif" : "png"}` : `https://cdn.discordapp.com/embed/avatars/${+userData.discriminator % 5}.png`;
+  avatar = userData.avatar ? `https://cdn.discordapp.com/avatars/${userData.id}/${avatarHash}.${avatarType}` : `https://cdn.discordapp.com/embed/avatars/${+userData.discriminator % 5}.png`;
  } else {
   avatarType = "png";
   avatar = `https://cdn.discordapp.com/embed/avatars/${+userData.discriminator % 5}.png`;

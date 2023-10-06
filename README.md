@@ -25,15 +25,15 @@
 
 ## ✨ Features
 
-- Generate user cards with user presence and activities.
-- Customize user card appearance by providing query parameters.
-- RESTful API to fetch user data and generate user cards.
-- Error handling for various scenarios.
-- No data tracking and no database required.
+- ✅ Generate user cards with user presence and activities.
+- 🎨 Customize user card appearance by providing query parameters.
+- 🌐 RESTful API to fetch user data and generate user cards.
+- 🚀 Error handling for various scenarios.
+- 🔒 No data tracking and no database required.
 
 ## 🚀 Getting Started
 
-**Join our [Discord Server](https://discord.gg/bVNNHuQ)**, without this you will not be able to use the website, Discord bot have to watch your profile and activities for this to work.
+**Join our [Discord Server](https://discord.gg/sgt4QEyDxK)**, without this you will not be able to use the website, Discord bot have to watch your profile and activities for this to work.
 
 > [!IMPORTANT]
 > If you leave the Discord server, the bot will no longer be able to watch your profile and activities, so the user card will not be generated.
@@ -51,6 +51,7 @@ Then, in your browser, **go to `https://discord-activity.deno.dev/api/:userId` a
 
 - `/api/:userId`: Generate a user card image with customizable appearance.
 - `/api/raw/:userId`: Get raw user data in JSON format.
+- `/badges/:badge`: Get a Discord badge image by name.
 
 ## 🎨 Customizations
 
@@ -91,7 +92,7 @@ hideStatus: true
 ## 🔩 Self Hosting
 
 1. Clone [this repository](https://github.com/igorkowalczyk/discord-activity) `git clone https://github.com/IgorKowalczyk/discord-activity`
-2. Fill environment variables in the `.env` file
+2. Fill environment variables in the `.env` file (see [Environment Variables](#-environment-variables))
 3. Run `deno task dev` to start the project in development mode or `deno task start` to run the project in production mode.
 4. Visit `http://localhost:8080` in your browser
 
@@ -104,15 +105,15 @@ hideStatus: true
 2. Create a new project on [Deno Deploy](https://deno.com/deploy)
 3. Connect your forked repository to the project
 4. Click on the `Deploy` button
-5. Fill environment variables in the project settings
+5. Fill environment variables in the project settings (see [Environment Variables](#-environment-variables))
 6. Visit the generated URL in your browser
 
 ## 📝 Environment Variables
 
-| Variable      | Description                                                                                         | Default |
-| ------------- | --------------------------------------------------------------------------------------------------- | ------- |
-| `DISCORD_KEY` | Discord Bot Token from the [Discord Developer Portal](https://discord.com/developers/applications). |         |
-| `PORT`        | Port on which the application will be running.                                                      | `3000`  |
+| Variable | Description                                                                                         | Default |
+| -------- | --------------------------------------------------------------------------------------------------- | ------- |
+| `TOKEN`  | Discord Bot Token from the [Discord Developer Portal](https://discord.com/developers/applications). |         |
+| `PORT`   | Port on which the application will be running.                                                      | `3000`  |
 
 ## ⁉️ Issues
 

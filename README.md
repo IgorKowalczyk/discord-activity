@@ -110,10 +110,10 @@ hideStatus: true
 
 ## 📝 Environment Variables
 
-| Variable | Description                                                                                         | Default |
-| -------- | --------------------------------------------------------------------------------------------------- | ------- |
-| `TOKEN`  | Discord Bot Token from the [Discord Developer Portal](https://discord.com/developers/applications). |         |
-| `PORT`   | Port on which the application will be running.                                                      | `3000`  |
+| Variable | Description                                                                                         | Default | Required |
+| -------- | --------------------------------------------------------------------------------------------------- | ------- | -------- |
+| `TOKEN`  | Discord Bot Token from the [Discord Developer Portal](https://discord.com/developers/applications). |         | ✅       |
+| `PORT`   | Port on which the application will be running.                                                      | `3000`  | ❌       |
 
 ## ⁉️ Issues
 

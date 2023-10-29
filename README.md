@@ -33,7 +33,7 @@
 
 ## 🚀 Getting Started
 
-**Join our [Discord Server](https://discord.gg/sgt4QEyDxK)**, without this you will not be able to use the website, Discord bot have to watch your profile and activities for this to work.
+**Join our [Discord Server](https://igorkowalczyk.dev/discord)**, without this you will not be able to use the website, Discord bot have to watch your profile and activities for this to work.
 
 > [!IMPORTANT]
 > If you leave the Discord server, the bot will no longer be able to watch your profile and activities, so the user card will not be generated.

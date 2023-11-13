@@ -1,11 +1,13 @@
 import React from "https://esm.sh/react@18.2.0";
 import { shortenText } from "./shortenText.ts";
 import type { User } from "./types.d.ts";
-import satori, { init } from "https://esm.sh/satori@0.0.44/wasm";
-import initYoga from "https://esm.sh/yoga-wasm-web@0.2.0";
-import { h } from "https://esm.sh/preact@10.18.1";
+import satori, { init } from "https://esm.sh/satori@0.10.9/wasm";
+import initYoga from "https://esm.sh/yoga-wasm-web@0.3.3";
 
-const wasm = await fetch("https://esm.sh/yoga-wasm-web@0.2.0/dist/yoga.wasm").then((res) => res.arrayBuffer());
+// Required to use JSX in TS
+import { h } from "https://esm.sh/preact@10.19.1";
+
+const wasm = await fetch("https://esm.sh/yoga-wasm-web@0.3.3/dist/yoga.wasm").then((res) => res.arrayBuffer());
 const wasmBytes = new Uint8Array(wasm);
 
 const yoga = await (initYoga as unknown as (wasm: Uint8Array) => Promise<unknown>)(wasmBytes);

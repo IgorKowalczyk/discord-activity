@@ -1,6 +1,7 @@
 import type { User } from "./types.d.ts";
-import type { Bot } from "https://deno.land/x/discordeno@13.0.0/bot.ts";
-import type { BotWithCache } from "https://deno.land/x/discordeno@13.0.0/plugins/cache/mod.ts";
+import { UserFlags } from "https://deno.land/x/discordeno@18.0.1/mod.ts";
+import type { Bot } from "https://deno.land/x/discordeno@18.0.1/bot.ts";
+import type { BotWithCache } from "https://deno.land/x/discordeno@18.0.1/plugins/cache/mod.ts";
 import { getIconCode } from "./getEmoji.ts";
 
 /* @ts-ignore BigInt cannot convert to json */
@@ -9,59 +10,26 @@ BigInt.prototype.toJSON = function () {
 };
 
 export function calculateBadges(publicFlags: number, avatarType: string) {
- const badges = [];
+ const badgeFlags = {
+  STAFF: UserFlags.DiscordEmployee,
+  PARTNER: UserFlags.PartneredServerOwner,
+  HYPESQUAD_EVENTS: UserFlags.HypeSquadEventsMember,
+  BUG_HUNTER_LEVEL_1: UserFlags.BugHunterLevel1,
+  HYPESQUAD_BRAVERY: UserFlags.HouseBravery,
+  HYPESQUAD_BRILLIANCE: UserFlags.HouseBrilliance,
+  HYPESQUAD_BALANCE: UserFlags.HouseBalance,
+  EARLY_SUPPORTER: UserFlags.EarlySupporter,
+  BUG_HUNTER_LEVEL_2: UserFlags.BugHunterLevel2,
+  VERIFIED_DEVELOPER: UserFlags.EarlyVerifiedBotDeveloper,
+  CERTIFIED_MODERATOR: UserFlags.DiscordCertifiedModerator,
+  ACTIVE_DEVELOPER: 1 << 22,
+ };
 
- if (publicFlags & (1 << 0)) {
-  badges.push("STAFF");
- }
+ const badges = Object.entries(badgeFlags)
+  .filter(([_badge, flag]) => (publicFlags & flag) !== 0)
+  .map(([badge]) => badge);
 
- if (publicFlags & (1 << 1)) {
-  badges.push("PARTNER");
- }
-
- if (publicFlags & (1 << 2)) {
-  badges.push("HYPESQUAD_EVENTS");
- }
-
- if (publicFlags & (1 << 3)) {
-  badges.push("BUG_HUNTER_LEVEL_1");
- }
-
- if (publicFlags & (1 << 6)) {
-  badges.push("HYPESQUAD_BRAVERY");
- }
-
- if (publicFlags & (1 << 7)) {
-  badges.push("HYPESQUAD_BRILLIANCE");
- }
-
- if (publicFlags & (1 << 8)) {
-  badges.push("HYPESQUAD_BALANCE");
- }
-
- if (publicFlags & (1 << 9)) {
-  badges.push("EARLY_SUPPORTER");
- }
-
- if (publicFlags & (1 << 14)) {
-  badges.push("BUG_HUNTER_LEVEL_2");
- }
-
- if (publicFlags & (1 << 17)) {
-  badges.push("VERIFIED_DEVELOPER");
- }
-
- if (publicFlags & (1 << 18)) {
-  badges.push("CERTIFIED_MODERATOR");
- }
-
- if (publicFlags & (1 << 22)) {
-  badges.push("ACTIVE_DEVELOPER");
- }
-
- if (avatarType === "gif") {
-  badges.push("NITRO");
- }
+ avatarType === "gif" && badges.push("NITRO");
 
  return badges;
 }
@@ -70,6 +38,7 @@ export async function getUserData(client: Bot, id: bigint, cache: BotWithCache):
  const userData = (await client.helpers.getUser(id)) as unknown as User;
  if (!userData) return null;
  if (userData.bot) return null;
+
  const userPresences = cache.presences.get(userData.id);
 
  let avatar;

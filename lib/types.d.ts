@@ -1,4 +1,4 @@
-import { Activity } from "https://deno.land/x/discordeno@13.0.0/mod.ts";
+import { Activity } from "https://deno.land/x/discordeno@18.0.1/mod.ts";
 
 export interface User {
  bot: boolean;

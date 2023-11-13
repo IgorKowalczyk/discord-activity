@@ -1,11 +1,11 @@
-import { createBot, Intents, startBot } from "https://deno.land/x/discordeno@13.0.0/mod.ts";
-import { enableCachePlugin } from "https://deno.land/x/discordeno@13.0.0/plugins/cache/mod.ts";
+import { createBot, Intents, startBot } from "https://deno.land/x/discordeno@18.0.1/mod.ts";
+import { enableCachePlugin } from "https://deno.land/x/discordeno@18.0.1/plugins/cache/mod.ts";
 import isHexColor from "https://deno.land/x/deno_validator@v0.0.5/lib/isHexColor.ts";
 import { getUserData } from "./lib/getUserData.ts";
 import { Logger } from "./lib/logger.ts";
 import { generateCard, generateErrorCard } from "./lib/generateCard.tsx";
-import { Hono } from "https://deno.land/x/hono@v3.7.5/mod.ts";
-import { serveStatic } from "https://deno.land/x/hono@v3.7.5/middleware.ts";
+import { Context, Hono, Next } from "https://deno.land/x/hono@v3.10.0/mod.ts";
+import { serveStatic } from "https://deno.land/x/hono@v3.10.0/middleware.ts";
 import "https://deno.land/x/dotenv@v3.2.2/load.ts";
 
 const port = parseInt(Deno.env.get("PORT") || "3000");
@@ -27,15 +27,9 @@ const client = createBot({
  },
 });
 
-/* @ts-ignore */
-const cache = enableCachePlugin(client, {
- guilds: {
-  enabled: true,
-  presences: true,
- },
-});
+const BotWithCache = enableCachePlugin(client);
 
-app.use("*", async (context, next) => {
+app.use("*", async (context: Context, next: Next) => {
  const time = Date.now();
  context.header("Access-Control-Allow-Origin", "*");
  context.header("Access-Control-Allow-Methods", "GET");
@@ -57,75 +51,50 @@ app.use("*", async (context, next) => {
 
 app.get("/badges/:badge", serveStatic({ root: "./public" }));
 
-app.get("/", (context) => {
+app.get("/", (context: Context) => {
  return context.redirect("https://github.com/igorkowalczyk/discord-activity");
 });
 
-app.get("/api/raw/:userId", async (context) => {
+app.get("/api/raw/:userId", async (context: Context) => {
  const id = context.req.param("userId") as unknown as bigint;
- context.header("Content-Type", "application/json");
 
- if (!id) {
-  context.status(400);
-  return context.json({ error: "Please provide a user ID!", status: 400 });
- }
+ if (!id || isNaN(parseInt(id.toString()))) return throwJsonError(context, 400, "Please provide a user ID!");
 
- if (isNaN(parseInt(id.toString()))) {
-  context.status(400);
-  return context.json({ error: "Please provide a valid user ID!", status: 400 });
- }
+ const user = await getUserData(client, id, BotWithCache);
 
- const user = await getUserData(client, id, cache);
-
- if (!user) {
-  context.status(404);
-  return context.json({ error: "User not found!", status: 404 });
- }
+ if (!user) return throwJsonError(context, 404, "User not found!");
 
  context.status(200);
  return context.json(user);
 });
 
-app.get("/api/:userCardId", async (context) => {
+app.get("/api/:userCardId", async (context: Context) => {
  try {
   const id = context.req.param("userCardId") as unknown as bigint;
   const options = context.req.query();
 
-  if (!id) {
-   context.status(400);
-   return context.json({ error: "Please provide a user ID!", status: 400 });
-  }
+  if (!id || isNaN(parseInt(id.toString()))) return throwImageError(context, 400, "Please provide a user ID!");
 
-  if (isNaN(parseInt(id.toString()))) {
-   context.status(400);
-   return context.json({ error: "Please provide a valid user ID!", status: 400 });
-  }
+  const userData = await getUserData(client, id, BotWithCache);
 
-  const userData = await getUserData(client, id, cache);
-
-  if (!userData) {
-   context.status(404);
-   return context.json({ error: "User not found!", status: 404 });
-  }
-
-  context.header("Content-Type", "image/svg+xml");
+  if (!userData) return throwImageError(context, 404, "User not found!");
 
   if (userData.activities && userData.activities.length > 0) {
    const nonStatusGames = userData.activities.filter((activity) => activity.type !== 4) || [];
-   const activity = nonStatusGames.length > 0 ? { ...nonStatusGames[0] } : null;
+   const firstNonStatusGame = nonStatusGames.length > 0 ? nonStatusGames[0] : null;
 
    userData.activities = [];
 
-   if (activity) {
-    if (activity.largeImage && typeof activity.largeImage === "string") {
-     activity.largeImage = activity.largeImage.startsWith("mp:external/") ? `https://media.discordapp.net/${activity.largeImage.replace("mp:", "")}` : activity.largeImage;
+   if (firstNonStatusGame) {
+    if (firstNonStatusGame.largeImage && typeof firstNonStatusGame.largeImage === "string") {
+     firstNonStatusGame.largeImage = firstNonStatusGame.largeImage.startsWith("mp:external/") ? `https://media.discordapp.net/${firstNonStatusGame.largeImage.replace("mp:", "")}` : firstNonStatusGame.largeImage;
     }
 
-    if (activity.smallImage && typeof activity.smallImage === "string") {
-     activity.smallImage = activity.smallImage.startsWith("mp:external/") ? `https://media.discordapp.net/${activity.smallImage.replace("mp:", "")}` : activity.smallImage;
+    if (firstNonStatusGame.smallImage && typeof firstNonStatusGame.smallImage === "string") {
+     firstNonStatusGame.smallImage = firstNonStatusGame.smallImage.startsWith("mp:external/") ? `https://media.discordapp.net/${firstNonStatusGame.smallImage.replace("mp:", "")}` : firstNonStatusGame.smallImage;
     }
 
-    userData.activities.push(activity);
+    userData.activities.push(firstNonStatusGame);
    }
   }
 
@@ -153,15 +122,28 @@ app.get("/api/:userCardId", async (context) => {
   }
 
   const image = await generateCard(userData, fontBuffer);
+
+  context.header("Content-Type", "image/svg+xml");
   return context.body(image);
  } catch (err) {
-  const card = await generateErrorCard(fontBuffer);
-  Logger("error", err);
-  context.status(500);
-  context.header("Content-Type", "image/svg+xml");
-  return context.body(card);
+  await throwImageError(context, err);
  }
 });
+
+const throwImageError = async (context: Context, code?: number, error?: string) => {
+ const card = await generateErrorCard(fontBuffer);
+ error && Logger("error", error);
+ context.status(code || 500);
+ context.header("Content-Type", "image/svg+xml");
+ return context.body(card);
+};
+
+const throwJsonError = (context: Context, code?: number, error?: string) => {
+ error && Logger("error", error);
+ context.status(code || 500);
+ context.header("Content-Type", "application/json");
+ return context.json({ error: error || "Internal Server Error", status: code || 500 });
+};
 
 await startBot(client);
 

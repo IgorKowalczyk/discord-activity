@@ -1,11 +1,8 @@
-const U200D = String.fromCharCode(8205);
-const UFE0Fg = /\uFE0F/g;
-
 function toCodePoint(unicodeSurrogates: string) {
  const r = [];
- let c = 0,
-  p = 0,
-  i = 0;
+ let c = 0;
+ let p = 0;
+ let i = 0;
 
  while (i < unicodeSurrogates.length) {
   c = unicodeSurrogates.charCodeAt(i++);
@@ -22,5 +19,5 @@ function toCodePoint(unicodeSurrogates: string) {
 }
 
 export function getIconCode(char: string) {
- return toCodePoint(char.indexOf(U200D) < 0 ? char.replace(UFE0Fg, "") : char);
+ return toCodePoint(char.indexOf(String.fromCharCode(8205)) < 0 ? char.replace(/\uFE0F/g, "") : char);
 }

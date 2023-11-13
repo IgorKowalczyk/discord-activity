@@ -115,6 +115,12 @@ hideStatus: true
 | `TOKEN`  | Discord Bot Token from the [Discord Developer Portal](https://discord.com/developers/applications). |         | ✅       |
 | `PORT`   | Port on which the application will be running.                                                      | `3000`  | ❌       |
 
+> [!NOTE]
+> You can see the `.env.example` file for an example of how to fill in the environment variables.
+
+> [!WARNING]
+> In Deno Deploy, the `PORT` variable is not required, because the port is assigned automatically!
+
 ## ⁉️ Issues
 
 If you come across any errors or have suggestions for improvements, please create a [new issue here](https://github.com/igorkowalczyk/discord-activity/issues) and describe it clearly.

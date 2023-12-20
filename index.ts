@@ -3,7 +3,7 @@ import { enableCachePlugin } from "https://deno.land/x/discordeno@18.0.1/plugins
 import isHexColor from "https://deno.land/x/deno_validator@v0.0.5/lib/isHexColor.ts";
 import { getUserData } from "./lib/getUserData.ts";
 import { Logger } from "./lib/logger.ts";
-import { generateCard, generateErrorCard } from "./lib/generateCard.tsx";
+import { generateCard, generateErrorCard } from "./lib/generateCard.ts";
 import { Context, Hono, Next } from "https://deno.land/x/hono@v3.10.0/mod.ts";
 import { serveStatic } from "https://deno.land/x/hono@v3.10.0/middleware.ts";
 import "https://deno.land/x/dotenv@v3.2.2/load.ts";
@@ -12,10 +12,6 @@ const port = parseInt(Deno.env.get("PORT") || "3000");
 const app = new Hono();
 
 if (!Deno.env.get("TOKEN")) throw new Error("Please provide a token!");
-
-const font = await Deno.readFile("./public/font.ttf");
-const fontBuffer = new Uint8Array(font).buffer;
-Logger("ready", `Loaded font! (${fontBuffer.byteLength} bytes)`);
 
 const client = createBot({
  token: Deno.env.get("TOKEN") || "",
@@ -27,23 +23,20 @@ const client = createBot({
  },
 });
 
-const BotWithCache = enableCachePlugin(client);
+const botWithCache = enableCachePlugin(client);
 
 app.use("*", async (context: Context, next: Next) => {
  const time = Date.now();
  context.header("Access-Control-Allow-Origin", "*");
  context.header("Access-Control-Allow-Methods", "GET");
- context.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
- context.header("Access-Control-Max-Age", "0");
- context.header("Cache-Control", "no-cache, no-store, must-revalidate");
- context.header("Pragma", "no-cache");
- context.header("Expires", "0");
  context.header("X-Content-Type-Options", "nosniff");
- context.header("X-Frame-Options", "DENY");
  context.header("X-XSS-Protection", "1; mode=block");
  context.header("Referrer-Policy", "no-referrer");
- context.header("Content-Security-Policy", "default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self'; script-src 'self' 'unsafe-inline'");
+ context.header("Content-Security-Policy", "default-src 'none'; img-src * data:; style-src 'unsafe-inline'");
  context.header("Permissions-Policy", "interest-cohort=()");
+ context.header("Cache-Control", "public, max-age=0, must-revalidate");
+ context.header("Pragma", "no-cache");
+ context.header("Expires", "0");
 
  await next();
  Logger("request", `${context.req.method} ${context.req.url} - ${Date.now() - time}ms`);
@@ -56,16 +49,18 @@ app.get("/", (context: Context) => {
 });
 
 app.get("/api/raw/:userId", async (context: Context) => {
- const id = context.req.param("userId") as unknown as bigint;
+ try {
+  const id = context.req.param("userId") as unknown as bigint;
+  if (!id || isNaN(parseInt(id.toString()))) return throwJsonError(context, 400, "Please provide a user ID!");
 
- if (!id || isNaN(parseInt(id.toString()))) return throwJsonError(context, 400, "Please provide a user ID!");
+  const user = await getUserData(client, id, botWithCache);
+  if (!user) return throwJsonError(context, 404, "User not found!");
 
- const user = await getUserData(client, id, BotWithCache);
-
- if (!user) return throwJsonError(context, 404, "User not found!");
-
- context.status(200);
- return context.json(user);
+  context.status(200);
+  return context.json(user);
+ } catch (_err) {
+  return throwJsonError(context, 500, "Something went wrong while fetching the user data!");
+ }
 });
 
 app.get("/api/:userCardId", async (context: Context) => {
@@ -75,27 +70,31 @@ app.get("/api/:userCardId", async (context: Context) => {
 
   if (!id || isNaN(parseInt(id.toString()))) return throwImageError(context, 400, "Please provide a user ID!");
 
-  const userData = await getUserData(client, id, BotWithCache);
-
+  const userData = await getUserData(client, id, botWithCache);
   if (!userData) return throwImageError(context, 404, "User not found!");
 
   if (userData.activities && userData.activities.length > 0) {
-   const nonStatusGames = userData.activities.filter((activity) => activity.type !== 4) || [];
-   const firstNonStatusGame = nonStatusGames.length > 0 ? nonStatusGames[0] : null;
-
-   userData.activities = [];
+   const firstNonStatusGame = userData.activities.find((activity) => activity.type !== 4) as unknown as { [key: string]: string };
 
    if (firstNonStatusGame) {
-    if (firstNonStatusGame.largeImage && typeof firstNonStatusGame.largeImage === "string") {
-     firstNonStatusGame.largeImage = firstNonStatusGame.largeImage.startsWith("mp:external/") ? `https://media.discordapp.net/${firstNonStatusGame.largeImage.replace("mp:", "")}` : firstNonStatusGame.largeImage;
-    }
+    ["largeImage", "smallImage"].forEach((key) => {
+     if (firstNonStatusGame[key] && typeof firstNonStatusGame[key] === "string" && firstNonStatusGame[key].startsWith("spotify:")) {
+      const [_, id] = firstNonStatusGame[key].split(":");
+      firstNonStatusGame[key] = `https://i.scdn.co/image/${id}`;
+     } else {
+      if (typeof firstNonStatusGame[key] === "string" && firstNonStatusGame[key].startsWith("mp:external/")) {
+       firstNonStatusGame[key] = `https://media.discordapp.net/${firstNonStatusGame[key].replace("mp:", "")}`;
+      }
+     }
+    });
 
-    if (firstNonStatusGame.smallImage && typeof firstNonStatusGame.smallImage === "string") {
-     firstNonStatusGame.smallImage = firstNonStatusGame.smallImage.startsWith("mp:external/") ? `https://media.discordapp.net/${firstNonStatusGame.smallImage.replace("mp:", "")}` : firstNonStatusGame.smallImage;
-    }
-
-    userData.activities.push(firstNonStatusGame);
+    // @ts-ignore - Discordeno typings are wrong
+    userData.activities = [firstNonStatusGame];
+   } else {
+    userData.activities = undefined;
    }
+  } else {
+   userData.activities = undefined;
   }
 
   userData.options = {
@@ -121,17 +120,17 @@ app.get("/api/:userCardId", async (context: Context) => {
    userData.options.hideStatus = options.hideStatus === "true" ? true : false;
   }
 
-  const image = await generateCard(userData, fontBuffer);
+  const image = generateCard(userData);
 
   context.header("Content-Type", "image/svg+xml");
   return context.body(image);
- } catch (err) {
-  await throwImageError(context, err);
+ } catch (_err) {
+  return throwImageError(context, 500, "Something went wrong while generating the user card!");
  }
 });
 
-const throwImageError = async (context: Context, code?: number, error?: string) => {
- const card = await generateErrorCard(fontBuffer);
+const throwImageError = (context: Context, code?: number, error?: string) => {
+ const card = generateErrorCard();
  error && Logger("error", error);
  context.status(code || 500);
  context.header("Content-Type", "image/svg+xml");

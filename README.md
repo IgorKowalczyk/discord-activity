@@ -11,7 +11,7 @@
   <img src="https://img.shields.io/github/v/release/igorkowalczyk/discord-activity?color=blue&logo=github&label=Version"/>
  </a>
  <br/>
- <b>🦕 This is a <a href="https://deno.com">Deno runtime</a> app that generates user cards for Discord users, showcasing their presence and activities. The application integrates with the Discord API using the <a href="https://deno.land/x/discordeno">Discordeno</a> library and serves user card images as SVG using <a href="https://github.com/vercel/satori">Satori</a>.</b>
+ <b>🦕 This is a <a href="https://deno.com">Deno runtime</a> application that generates Discord profile cards, presenting users' activity and presence. Using the Discord API via the <a href="https://deno.land/x/discordeno">Discordeno</a> library, the app serves user cards in SVG format.</b>
 </div>
 
 ---

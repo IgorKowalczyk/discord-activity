@@ -1,21 +1,21 @@
 function toCodePoint(unicodeSurrogates: string) {
- const r = [];
- let c = 0;
- let p = 0;
- let i = 0;
+ const codePoints = [];
+ let currentChar = 0;
+ let surrogatePair = 0;
+ let index = 0;
 
- while (i < unicodeSurrogates.length) {
-  c = unicodeSurrogates.charCodeAt(i++);
-  if (p) {
-   r.push((65536 + ((p - 55296) << 10) + (c - 56320)).toString(16));
-   p = 0;
-  } else if (c >= 55296 && c <= 56319) {
-   p = c;
+ while (index < unicodeSurrogates.length) {
+  currentChar = unicodeSurrogates.charCodeAt(index++);
+  if (surrogatePair) {
+   codePoints.push((65536 + ((surrogatePair - 55296) << 10) + (currentChar - 56320)).toString(16));
+   surrogatePair = 0;
+  } else if (currentChar >= 55296 && currentChar <= 56319) {
+   surrogatePair = currentChar;
   } else {
-   r.push(c.toString(16));
+   codePoints.push(currentChar.toString(16));
   }
  }
- return r.join("-");
+ return codePoints.join("-");
 }
 
 export function getIconCode(char: string) {

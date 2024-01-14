@@ -120,7 +120,7 @@ app.get("/api/:userCardId", async (context: Context) => {
    userData.options.hideStatus = options.hideStatus === "true" ? true : false;
   }
 
-  const image = generateCard(userData);
+  const image = await generateCard(userData);
 
   context.header("Content-Type", "image/svg+xml");
   return context.body(image);

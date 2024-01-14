@@ -9,7 +9,27 @@ const availableStatuses: Record<string, string> = {
  offline: "#747F8D",
 };
 
-export function generateCard(user: User): string {
+const base64ImageFetcher = async (url: string) => {
+ try {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("Invalid URL - Failed to fetch image");
+  const blob = await res.blob();
+  if (!blob.type.startsWith("image")) throw new Error("Failed to process blob");
+  const buffer = await blob.arrayBuffer();
+  return `data:${blob.type};base64,${btoa(String.fromCharCode(...new Uint8Array(buffer)))}`;
+ } catch (e) {
+  throw new Error(e);
+ }
+};
+
+export async function generateCard(user: User): Promise<string> {
+ const userAvatar = await base64ImageFetcher(user.avatar);
+ const userBadges = new Map<string, string>();
+
+ for (const badge of user.badges) {
+  userBadges.set(badge, await base64ImageFetcher(`https://cdn.jsdelivr.net/gh/merlinfuchs/discord-badges/PNG/${badge.toLowerCase()}.png`));
+ }
+
  return `
   <svg xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" width="400px" height="200px">
    <foreignObject x="0" y="0" width="410px" height="200px">
@@ -45,7 +65,7 @@ export function generateCard(user: User): string {
        >
         <img
          alt="${escape(user.username)}"
-         src="${user.avatar}"
+         src="${userAvatar}"
          width="64px"
          height="64px"
          style="
@@ -97,12 +117,13 @@ export function generateCard(user: User): string {
          ${escape(shortenText(user.username, 16))}
          ${
   user.badges &&
+  user.badges.length > 0 &&
   user.badges
    .map(
     (badge) => `
          <img
-          src="${`https://cdn.jsdelivr.net/gh/merlinfuchs/discord-badges/PNG/${badge.toLowerCase()}.png`}"
-          alt="${badge}"
+          src="${userBadges.get(badge)}"
+          alt="${escape(badge)}"
           width="24px"
           height="24px"
           style="
@@ -125,7 +146,7 @@ export function generateCard(user: User): string {
         align-items: center;
        "
       >
-       ${user.customStatus.image ? `<img src="${user.customStatus.image}" alt="emoji" width="16px" height="16px" />` : `<div style="display: flex"></div>`}
+       ${user.customStatus.image ? `<img src="${await base64ImageFetcher(user.customStatus.image)}" alt="emoji" width="16px" height="16px" />` : `<div style="display: flex"></div>`}
        <span
         style="
          opacity: 0.5;
@@ -187,7 +208,7 @@ export function generateCard(user: User): string {
             style="
              border-radius: 10px;
             "
-            src="${user.activities[0].largeImage}"
+            src="${await base64ImageFetcher(user.activities[0].largeImage)}"
             alt="Discord"
             width="82px"
             height="82px"
@@ -207,7 +228,7 @@ export function generateCard(user: User): string {
              bottom: -4px;
              right: -4px;
             "
-            src="${user.activities[0].smallImage}"
+            src="${await base64ImageFetcher(user.activities[0].smallImage)}"
             alt="Discord"
             width="32px"
             height="32px"
@@ -285,7 +306,7 @@ export function generateCard(user: User): string {
         padding: 26px;
         color: #fff;
         opacity: 0.5;
-               display: flex;
+        display: flex;
        flex-direction: column;
        align-items: center;
        "

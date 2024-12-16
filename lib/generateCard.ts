@@ -1,6 +1,8 @@
-import { shortenText } from "./shortenText.ts";
-import type { User } from "./types.d.ts";
-import { escape } from "./escape.ts";
+import type { User } from "./schemas.ts";
+import type { cardOptionsSchema } from "./schemas.ts";
+import { escape, shortenText } from "./utils.ts";
+import { base64ImageFetcher } from "./base64ImageFetcher.ts";
+import { ActivityTypes } from "npm:@discordeno/types@20.0.0";
 
 const availableStatuses: Record<string, string> = {
  online: "#43B581",
@@ -9,26 +11,15 @@ const availableStatuses: Record<string, string> = {
  offline: "#747F8D",
 };
 
-const base64ImageFetcher = async (url: string) => {
- try {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error("Invalid URL - Failed to fetch image");
-  const blob = await res.blob();
-  if (!blob.type.startsWith("image")) throw new Error("Failed to process blob");
-  const buffer = await blob.arrayBuffer();
-  return `data:${blob.type};base64,${btoa(String.fromCharCode(...new Uint8Array(buffer)))}`;
- } catch (e) {
-  throw new Error(e);
- }
-};
-
-export async function generateCard(user: User): Promise<string> {
+export async function generateCard(user: User, options: cardOptionsSchema): Promise<string> {
  const userAvatar = await base64ImageFetcher(user.avatar);
  const userBadges = new Map<string, string>();
 
  for (const badge of user.badges) {
   userBadges.set(badge, await base64ImageFetcher(`https://cdn.jsdelivr.net/gh/merlinfuchs/discord-badges/PNG/${badge.toLowerCase()}.png`));
  }
+
+ const firstActivity = user.activities[0] || null;
 
  return `
   <svg xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" width="400px" height="200px">
@@ -42,8 +33,8 @@ export async function generateCard(user: User): Promise<string> {
     height: 200px;
     inset: 0px;
     font-family: 'Century Gothic', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: ${user.options.backgroundColor};
-    border-radius: ${user.options.borderRadius + "px"};
+    background-color: ${options.backgroundColor};
+    border-radius: ${options.borderRadius + "px"};
    "
     >
      <div
@@ -64,7 +55,7 @@ export async function generateCard(user: User): Promise<string> {
      "
        >
         <img
-         alt="${escape(user.username)}"
+         alt="${shortenText(escape(user.username || "Unknown"), 32)}"
          src="${userAvatar}"
          width="64px"
          height="64px"
@@ -73,7 +64,7 @@ export async function generateCard(user: User): Promise<string> {
       "
         />
         ${
-  !user.options.hideStatus &&
+  !options.hideStatus &&
   `
       <div
        style="
@@ -81,7 +72,7 @@ export async function generateCard(user: User): Promise<string> {
         bottom: 0px;
         right: 0px;
         border-radius: 100%;
-        background-color: #161a23;
+        background-color: ${options.backgroundColor};
         padding: 4px;
        "
       >
@@ -90,7 +81,7 @@ export async function generateCard(user: User): Promise<string> {
          width: 12px;
          height: 12px;
          border-radius: 100%;
-         background-color: ${availableStatuses[user.status?.desktop || user.status?.mobile || user.status?.web || "offline"]};
+         background-color: ${availableStatuses[user.status.desktop || user.status.mobile || user.status.web || "offline"]};
         "
        />
       </div>`
@@ -98,8 +89,6 @@ export async function generateCard(user: User): Promise<string> {
        </div>
        <div
         style="
-      display: flex;
-      flex-direction: column;
       margin-left: 12px;
      "
        >
@@ -114,13 +103,12 @@ export async function generateCard(user: User): Promise<string> {
        color: #fff;
       "
         >
-         ${escape(shortenText(user.username, 16))}
+         ${shortenText(escape(user.username || "Unknown"), 32)}
          ${
-  user.badges &&
-  user.badges.length > 0 &&
-  user.badges
-   .map(
-    (badge) => `
+  user.badges && user.badges.length > 0
+   ? user.badges
+    .map(
+     (badge) => `
          <img
           src="${userBadges.get(badge)}"
           alt="${escape(badge)}"
@@ -131,12 +119,13 @@ export async function generateCard(user: User): Promise<string> {
           "
          />
         `,
-   )
-   .join("")
+    )
+    .join("")
+   : ""
  }
         </span>
         ${
-  user.customStatus && user.customStatus.state && user.customStatus.image
+  user.customStatus
    ? `
       <div
        style="
@@ -146,26 +135,24 @@ export async function generateCard(user: User): Promise<string> {
         align-items: center;
        "
       >
-       ${user.customStatus.image ? `<img src="${await base64ImageFetcher(user.customStatus.image)}" alt="emoji" width="16px" height="16px" />` : `<div style="display: flex"></div>`}
+          ${user.customStatus.image ? `<img src="${await base64ImageFetcher(user.customStatus.image)}" alt="emoji" width="16px" height="16px" />` : `<div style="display: flex"></div>`}
        <span
         style="
          opacity: 0.5;
-         padding-left: ${user.customStatus.image ? "4px" : "0px"};
+         ${user.customStatus.image ? "margin-left: 4px;" : ""}
          color: #fff;
         "
        >
-        ${escape(shortenText(user.customStatus.state || "", 32))}
+        ${shortenText(escape(user.customStatus.state || ""), 32)}
        </span>
       </div>
       `
-   : `<div style="display: flex"></div>`
+   : ""
  }
        </div>
       </div>
       <div
        style="
-     display: flex;
-     flex-direction: column;
      width: 100%;
      background-color: #ffffff1a;
      height: 1px;
@@ -173,7 +160,7 @@ export async function generateCard(user: User): Promise<string> {
     "
       />
       ${
-  user.activities && user.activities.length > 0
+  firstActivity
    ? `
      <div>
       <div
@@ -202,22 +189,35 @@ export async function generateCard(user: User): Promise<string> {
          "
         >
          ${
-    user.activities[0].largeImage
+    firstActivity.assets?.large_image
      ? `
            <img
             style="
              border-radius: 10px;
             "
-            src="${await base64ImageFetcher(user.activities[0].largeImage)}"
-            alt="Discord"
+            src="${await base64ImageFetcher(firstActivity.assets.large_image)}"
+            alt="${escape(firstActivity.assets.large_text || "Activity Image")}"
             width="82px"
             height="82px"
            />
            `
+     // if there is no large image, we will use the small image as fallback and dont show the small image
+     : firstActivity.assets?.small_image
+     ? ` 
+            <img
+              style="
+                border-radius: 10px;
+              "
+              src="${await base64ImageFetcher(firstActivity.assets.small_image)}"
+              alt="${escape(firstActivity.assets.small_text || "Activity Image")}"
+              width="82px"
+              height="82px"
+            />
+            `
      : ""
    }
          ${
-    user.activities[0].smallImage
+    firstActivity.assets?.small_image && firstActivity.assets?.large_image
      ? `
            <img
             style="
@@ -228,8 +228,8 @@ export async function generateCard(user: User): Promise<string> {
              bottom: -4px;
              right: -4px;
             "
-            src="${await base64ImageFetcher(user.activities[0].smallImage)}"
-            alt="Discord"
+            src="${await base64ImageFetcher(firstActivity.assets.small_image)}"
+            alt="${escape(firstActivity.assets.small_text || "Activity Image")}"
             width="32px"
             height="32px"
            />
@@ -248,23 +248,31 @@ export async function generateCard(user: User): Promise<string> {
          "
         >
          ${
-    user.activities[0].name
+    firstActivity.name
      ? `
           <span
            style="
             font-size: 1.15rem;
             font-weight: 700;
-            color: ${user.activities[0].type === 2 ? "#1CB853" : "#fff"};
+            color: ${firstActivity.type === ActivityTypes.Listening ? "#1CB853" : "#fff"};
            "
           >
-          ${user.activities[0].type === 2 ? "Listening to Spotify..." : escape(shortenText(user.activities[0].name, 32))}
+
+      ${firstActivity.type === ActivityTypes.Playing ? "Playing " : ""}
+      ${firstActivity.type === ActivityTypes.Streaming ? "Streaming " : ""}
+      ${firstActivity.type === ActivityTypes.Listening ? "Listening to Spotify..." : ""}
+      ${firstActivity.type === ActivityTypes.Watching ? "Watching " : ""}
+      ${firstActivity.type === ActivityTypes.Competing ? "Competing in " : ""}
+
+
+          ${shortenText(escape(firstActivity.name), 32)}
           </span>
           `
      : ""
    }
 
          ${
-    user.activities[0].details
+    firstActivity.details
      ? `
           <span
            style="
@@ -273,14 +281,14 @@ export async function generateCard(user: User): Promise<string> {
             opacity: 0.5;
            "
           >
-           ${escape(user.activities[0].details)}
+           ${shortenText(escape(firstActivity.details), 80)}
           </span>
           `
      : ""
    }
 
          ${
-    user.activities[0].state
+    firstActivity.state
      ? `
           <span
            style="
@@ -289,8 +297,8 @@ export async function generateCard(user: User): Promise<string> {
             opacity: 0.5;
            "
           >
-          ${user.activities[0].type === 2 ? "By " : ""}
-           ${escape(user.activities[0].state)}
+          ${firstActivity.type === 2 ? "By " : ""}
+           ${shortenText(escape(firstActivity.state), 32)}
           </span>
           `
      : ""
@@ -311,7 +319,7 @@ export async function generateCard(user: User): Promise<string> {
        align-items: center;
        "
       >
-       ${escape(shortenText(user.options.idleMessage, 32))}
+       ${shortenText(escape(options.idleMessage), 80)}
       </span>`
  }
      </div>
@@ -350,12 +358,10 @@ export function generateErrorCard(error?: string): string {
     style="
      display: flex;
      align-items: center;
-     justify-content: center;
      font-size: 25px;
      margin: 0 auto;
      gap: 8px;
      white-space: nowrap;
-     text-align: center;
      font-weight: 700;
      color: #F87171;
     "
@@ -367,37 +373,37 @@ export function generateErrorCard(error?: string): string {
      stroke-width="2"
      stroke="#F87171"
      style="
-      width: 1.5rem;
-      height: 1.5rem;
+      width: 2rem;
+      height: 2rem;
      "
     >
      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
     </svg>
+    <span style="
+    margin-top: -2px;
+    ">
     Error
+    </span>
    </span>
    <div
     style="
-     display: flex;
-     flex-direction: column;
      width: 100%;
      background-color: #ffffff1a;
      height: 1px;
      margin-top: 12px;
     "
    />
-
     <span
      style="
-      padding-top: 26px;
+      padding-top: 12px;
       word-break: break-word;
-      text-align: center;
       font-weight: 400;
       margin: 0 auto;
       color: #fff;
       opacity: 0.5;
      "
     >
-     ${error || "An error occured while generating the card. Please try again later."}
+     ${shortenText(escape(error || "An error occured while generating the card. Please try again later."), 80)}
     </span>
   </div>
   </div>

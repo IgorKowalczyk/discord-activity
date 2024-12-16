@@ -1,4 +1,14 @@
-function toCodePoint(unicodeSurrogates: string) {
+/**
+ * Shorten the text to a certain length
+ */
+export function shortenText(text: string, count = 30) {
+ return text.slice(0, count) + (text.length > count ? "..." : "");
+}
+
+/**
+ * Convert unicode surrogates to code points
+ */
+export function toCodePoint(unicodeSurrogates: string) {
  const codePoints = [];
  let currentChar = 0;
  let surrogatePair = 0;
@@ -18,6 +28,26 @@ function toCodePoint(unicodeSurrogates: string) {
  return codePoints.join("-");
 }
 
+/**
+ * Get the unicode code of the icon
+ */
 export function getIconCode(char: string) {
  return toCodePoint(char.indexOf(String.fromCharCode(8205)) < 0 ? char.replace(/\uFE0F/g, "") : char);
+}
+
+/**
+ * Escape HTML entities
+ */
+export function escape(text: string): string {
+ const entity: { [char: string]: string } = {
+  "<": "&lt;",
+  ">": "&gt;",
+  "&": "&amp;",
+  "'": "&#39;",
+  '"': "&#34;",
+ };
+
+ return text.replaceAll(/[&<>"']/g, (char) => {
+  return entity[char];
+ });
 }

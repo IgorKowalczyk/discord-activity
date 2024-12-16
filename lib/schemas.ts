@@ -17,7 +17,7 @@ export const cardOptions = z.object({
    },
    {
     message: "Invalid hex color code",
-   }
+   },
   )
   .transform((value = "") => {
    if (!value.startsWith("#")) value = `#${value}`;
@@ -25,8 +25,18 @@ export const cardOptions = z.object({
   })
   .default("#161a23"),
  borderRadius: z.string().optional().default("10"),
- idleMessage: z.string().optional().default("There is nothing going on right now..."),
+ idleMessage: z.string().optional().default("There is nothing going on here!"),
  hideStatus: z
+  .string()
+  .optional()
+  .default("false")
+  .transform((value) => value === "true"),
+ hideBadges: z
+  .string()
+  .optional()
+  .default("false")
+  .transform((value) => value === "true"),
+ hideCustomStatus: z
   .string()
   .optional()
   .default("false")

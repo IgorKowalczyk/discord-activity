@@ -64,8 +64,8 @@ export async function generateCard(user: User, options: cardOptionsSchema): Prom
       "
         />
         ${
-  !options.hideStatus &&
-  `
+  !options.hideStatus
+   ? `
       <div
        style="
         position: absolute;
@@ -85,6 +85,7 @@ export async function generateCard(user: User, options: cardOptionsSchema): Prom
         "
        />
       </div>`
+   : ""
  }
        </div>
        <div
@@ -105,7 +106,7 @@ export async function generateCard(user: User, options: cardOptionsSchema): Prom
         >
          ${shortenText(escape(user.username || "Unknown"), 32)}
          ${
-  user.badges && user.badges.length > 0
+  !options.hideBadges && user.badges && user.badges.length > 0
    ? user.badges
     .map(
      (badge) => `
@@ -125,7 +126,7 @@ export async function generateCard(user: User, options: cardOptionsSchema): Prom
  }
         </span>
         ${
-  user.customStatus
+  !options.hideCustomStatus && user.customStatus
    ? `
       <div
        style="

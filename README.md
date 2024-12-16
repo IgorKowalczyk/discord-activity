@@ -58,12 +58,14 @@ Then, in your browser, **go to `https://discord-activity.deno.dev/api/:userId` a
 > [!NOTE]
 > You can customize the appearance of the user card by providing query parameters to the `/api/:userId` endpoint.
 
-| Parameter      | Description                               | Default                           |
-| -------------- | ----------------------------------------- | --------------------------------- |
-| `bgColor`      | Background color of the user card.        | `#161a23`                         |
-| `borderRadius` | Border radius of the user card.           | `10`                              |
-| `idleMessage`  | Message to display when the user is idle. | `There is nothing going on here!` |
-| `hideStatus`   | Hide the status of the user.              | `false`                           |
+| Parameter          | Description                               | Default                           |
+| ------------------ | ----------------------------------------- | --------------------------------- |
+| `bgColor`          | Background color of the user card.        | `#161a23`                         |
+| `borderRadius`     | Border radius of the user card.           | `10`                              |
+| `idleMessage`      | Message to display when the user is idle. | `There is nothing going on here!` |
+| `hideStatus`       | Hide the status of the user.              | `false`                           |
+| `hideCustomStatus` | Hide the custom status of the user.       | `false`                           |
+| `hideBadges`       | Hide the badges of the user.              | `false`                           |
 
 > [!WARNING]
 > The `bgColor` parameter must be a hexadecimal color code without the `#` symbol. For example, `#161a23` should be `161a23`.

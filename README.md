@@ -110,10 +110,11 @@ hideStatus: true
 
 ## 📝 Environment Variables
 
-| Variable | Description                                                                                         | Default | Required |
-| -------- | --------------------------------------------------------------------------------------------------- | ------- | -------- |
-| `TOKEN`  | Discord Bot Token from the [Discord Developer Portal](https://discord.com/developers/applications). |         | ✅       |
-| `PORT`   | Port on which the application will be running.                                                      | `3000`  | ❌       |
+| Variable   | Description                                                                                         | Default | Required |
+| ---------- | --------------------------------------------------------------------------------------------------- | ------- | -------- |
+| `TOKEN`    | Discord Bot Token from the [Discord Developer Portal](https://discord.com/developers/applications). |         | ✅       |
+| `GUILD_ID` | Discord Guild ID where the bot will watch the users.                                                |         | ✅       |
+| `PORT`     | Port on which the application will be running.                                                      | `3000`  | ❌       |
 
 > [!NOTE]
 > You can see the `.env.example` file for an example of how to fill in the environment variables.

@@ -1,10 +1,12 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@hono/hono@*": "4.6.14",
     "jsr:@hono/hono@4.6.14": "4.6.14",
     "jsr:@std/dotenv@0.225.3": "0.225.3",
     "npm:@discordeno/bot@20.0.0": "20.0.0",
     "npm:@discordeno/gateway@20.0.0": "20.0.0",
+    "npm:@discordeno/types@20.0.0": "20.0.0",
     "npm:dd-cache-proxy@2.5.0": "2.5.0_@discordeno+bot@20.0.0",
     "npm:zod@3.24.1": "3.24.1"
   },

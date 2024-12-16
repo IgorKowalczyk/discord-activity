@@ -46,14 +46,12 @@ export async function getUserData(id: string): Promise<User | null> {
  }
 
  if (userPresences && userPresences.activities) {
-  console.log(userPresences.activities);
   const statusActivity = userPresences.activities.find((activity) => activity.type === ActivityTypes.Custom);
   const otherActivities = userPresences.activities.filter((activity) => activity.type !== ActivityTypes.Custom);
 
   if (statusActivity) {
    if (statusActivity.state) statusState = statusActivity.state;
    if (statusActivity.emoji) {
-    console.log(statusActivity.emoji);
     if (statusActivity.emoji.id) {
      statusEmoji = `https://cdn.discordapp.com/emojis/${statusActivity.emoji.id}.${statusActivity.emoji.animated ? "gif" : "png"}`;
     } else if (statusActivity.emoji.name) {

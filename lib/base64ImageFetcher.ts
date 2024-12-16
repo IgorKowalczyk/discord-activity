@@ -1,6 +1,5 @@
 export const base64ImageFetcher = async (url: string) => {
  try {
-  console.log(url);
   const res = await fetch(url);
   if (!res.ok) throw new Error("Invalid URL - Failed to fetch image");
   const blob = await res.blob();

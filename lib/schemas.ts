@@ -10,10 +10,17 @@ export const cardOptions = z.object({
  backgroundColor: z
   .string()
   .optional()
-  .refine((value) => {
-   if (typeof value !== "string") return false;
+  .refine(
+   (value = "") => {
+    if (!value.startsWith("#")) value = `#${value}`;
+    return hexcolorRegex.test(value);
+   },
+   {
+    message: "Invalid hex color code",
+   }
+  )
+  .transform((value = "") => {
    if (!value.startsWith("#")) value = `#${value}`;
-   if (!hexcolorRegex.test(value)) return false;
    return value;
   })
   .default("#161a23"),

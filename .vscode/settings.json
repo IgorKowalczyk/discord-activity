@@ -1,9 +1,20 @@
 {
- "markdown.validate.fragmentLinks.enabled": "ignore",
- "markdown.validate.referenceLinks.enabled": "ignore",
- "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
- "editor.codeActionsOnSave": {
-  "source.fixAll.eslint": "explicit"
+ "deno.enable": true,
+ "deno.lint": true,
+ "editor.defaultFormatter": "denoland.vscode-deno",
+ "[typescriptreact]": {
+  "editor.defaultFormatter": "denoland.vscode-deno"
  },
- "deno.enable": true
+ "[typescript]": {
+  "editor.defaultFormatter": "denoland.vscode-deno"
+ },
+ "[javascriptreact]": {
+  "editor.defaultFormatter": "denoland.vscode-deno"
+ },
+ "[javascript]": {
+  "editor.defaultFormatter": "denoland.vscode-deno"
+ },
+ "css.customData": [
+  ".vscode/tailwind.json"
+ ]
 }

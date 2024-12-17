@@ -399,6 +399,7 @@ export function generateErrorCard(error?: string): string {
       padding-top: 12px;
       word-break: break-word;
       font-weight: 400;
+      text-align: center;
       margin: 0 auto;
       color: #fff;
       opacity: 0.5;

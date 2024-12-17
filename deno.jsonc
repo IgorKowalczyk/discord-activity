@@ -1,14 +1,17 @@
 {
  "$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
  "tasks": {
-  "dev": "deno run --watch --allow-env --allow-net --allow-read index.ts",
-  "start": "deno run --allow-env --allow-net --allow-read index.ts",
-  "check": "deno check ./*.ts"
+  "dev": "deno run -A --watch dev.ts",
+  "start": "deno run -A --watch=static/,routes/ dev.ts",
+  "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
+  "build": "BUILD=true deno run -A dev.ts build",
+  "preview": "deno run -A server.ts",
+  "update": "deno run -A -r https://fresh.deno.dev/update ."
  },
  "lint": {
   "include": ["."],
   "rules": {
-   "tags": ["recommended"]
+   "tags": ["fresh", "recommended"]
   }
  },
  "fmt": {
@@ -19,12 +22,27 @@
   "singleQuote": false,
   "proseWrap": "preserve"
  },
+ "exclude": ["**/_fresh/*"],
  "imports": {
+  "$fresh/": "https://deno.land/x/fresh@1.7.3/",
+  "class-variance-authority": "npm:class-variance-authority@0.7.1",
+  "clsx": "npm:clsx@2.1.1",
+  "preact": "https://esm.sh/preact@10.22.0",
+  "preact/": "https://esm.sh/preact@10.22.0/",
+  "@preact/compat": "https://esm.sh/*@preact/compat@18.3.1",
+  "tailwind-merge": "npm:tailwind-merge@^2.5.5",
+  "tailwindcss": "npm:tailwindcss@3.4.16",
+  "tailwindcss/": "npm:/tailwindcss@3.4.16/",
+  "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js",
+  "tailwindcss/defaultTheme": "npm:/tailwindcss@3.4.16/defaultTheme.js",
   "@discordeno/bot": "npm:@discordeno/bot@20.0.0",
   "@discordeno/gateway": "npm:@discordeno/gateway@20.0.0",
-  "@hono/hono": "jsr:@hono/hono@4.6.14",
   "@std/dotenv": "jsr:@std/dotenv@0.225.3",
-  "dd-cache-proxy": "npm:dd-cache-proxy@2.5.0",
   "zod": "npm:zod@3.24.1"
- }
+ },
+ "compilerOptions": {
+  "jsx": "react-jsx",
+  "jsxImportSource": "preact"
+ },
+ "nodeModulesDir": "auto"
 }

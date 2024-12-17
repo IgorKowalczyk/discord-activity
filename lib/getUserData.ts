@@ -1,7 +1,7 @@
 import { type User, UserActivity } from "./schemas.ts";
-import { presencesCache } from "../index.ts";
+import { presencesCache } from "../bot.ts";
 import { calculateBadges } from "./calculateBadges.ts";
-import { bot } from "../index.ts";
+import { bot } from "../bot.ts";
 import { ActivityTypes } from "npm:@discordeno/types@20.0.0";
 import { getIconCode } from "./utils.ts";
 import "./patchBigInt.ts";

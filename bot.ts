@@ -2,16 +2,11 @@ import "@std/dotenv/load";
 import { createBot, DiscordGatewayPayload, DiscordGuildMembersChunk } from "@discordeno/bot";
 import { DiscordPresenceUpdate, Intents } from "npm:@discordeno/types@20.0.0";
 import { addDesiredProperties } from "./lib/addDesiredProperties.ts";
-const token = Deno.env.get("TOKEN");
-const guildId = Deno.env.get("GUILD_ID");
-
-if (!token) throw new Error("Please provide a valid token!");
-if (!guildId) throw new Error("Please provide a valid guild ID! Make sure the bot is in the server!");
 
 export const presencesCache = new Map<string, DiscordPresenceUpdate>();
 
 export const bot = createBot({
- token: token,
+ token: Deno.env.get("TOKEN") || "",
  intents: Intents.Guilds | Intents.GuildMembers | Intents.GuildPresences,
  desiredProperties: {
   user: {

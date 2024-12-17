@@ -1,31 +1,36 @@
 name: Deploy
-
-on: [push, pull_request]
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: main
 
 jobs:
- deploy:
-  name: Deploy
-  runs-on: ubuntu-latest
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
 
-  permissions:
-   id-token: write
-   contents: read
+    permissions:
+      id-token: write # Needed for auth with Deno Deploy
+      contents: read # Needed to clone the repository
 
-  steps:
-   - name: 🧱 Checkout repository
-     uses: actions/checkout@v4
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
 
-   - name: 🚀 Install deno
-     uses: denoland/setup-deno@v2
-     with:
-      deno-version: v2.x
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
 
-   - name: 🚀 Build project
-     run: "deno task build"
+      - name: Build step
+        run: "deno task build"
 
-   - name: 🚀 Upload to Deno Deploy
-     uses: denoland/deployctl@v1
-     with:
-      project: "discord-activity"
-      entrypoint: "server.ts"
-      root: "."
+      - name: Upload to Deno Deploy
+        uses: denoland/deployctl@v1
+        with:
+          project: "discord-activity"
+          entrypoint: "server.ts"
+          root: "."
+          
+          

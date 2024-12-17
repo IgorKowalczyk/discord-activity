@@ -1,9 +1,6 @@
 name: Deploy
-on:
- push:
-  branches: website
- pull_request:
-  branches: website
+
+on: [push, pull_request]
 
 jobs:
  deploy:
@@ -15,18 +12,18 @@ jobs:
    contents: read
 
   steps:
-   - name: Clone repository
+   - name: 🧱 Checkout repository
      uses: actions/checkout@v4
 
-   - name: Install Deno
+   - name: 🚀 Install deno
      uses: denoland/setup-deno@v2
      with:
       deno-version: v2.x
 
-   - name: Build step
+   - name: 🚀 Build project
      run: "deno task build"
 
-   - name: Upload to Deno Deploy
+   - name: 🚀 Upload to Deno Deploy
      uses: denoland/deployctl@v1
      with:
       project: "discord-activity"

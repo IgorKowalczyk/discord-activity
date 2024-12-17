@@ -1,8 +1,9 @@
 import { DiscordUser, GatewayOpcodes } from "npm:@discordeno/types@20.0.0";
-import { bot } from "../index.ts";
-import { DiscordGuild } from "@discordeno/bot";
+import { bot } from "../bot.ts";
 
-export async function fetchUserPresences(userId: DiscordUser["id"], guildId: DiscordGuild["id"]) {
+export async function fetchUserPresences(userId: DiscordUser["id"]) {
+ const guildId = Deno.env.get("GUILD_ID");
+ if (!guildId) return;
  const shardId = bot.gateway.calculateShardId(guildId);
 
  const options = {

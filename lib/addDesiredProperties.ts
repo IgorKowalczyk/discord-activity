@@ -1,4 +1,4 @@
-import { bot } from "../index.ts";
+import { bot } from "../bot.ts";
 
 export function addDesiredProperties(client: typeof bot) {
  client.transformers.desiredProperties.user.accentColor = true;

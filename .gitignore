@@ -102,3 +102,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Fresh build directory
+_fresh/

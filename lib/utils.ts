@@ -1,3 +1,7 @@
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+import { useEffect, useState } from "preact/hooks";
+
 /**
  * Shorten the text to a certain length
  */
@@ -50,4 +54,30 @@ export function escape(text: string): string {
  return text.replaceAll(/[&<>"']/g, (char) => {
   return entity[char];
  });
+}
+
+/**
+ * Merge classnames
+ */
+export function cn(...inputs: ClassValue[]) {
+ return twMerge(clsx(inputs));
+}
+
+/**
+ * Debounce a value
+ */
+export function useDebounce(value: string, delay: number) {
+ const [debouncedValue, setDebouncedValue] = useState(value);
+
+ useEffect(() => {
+  const handler = setTimeout(() => {
+   setDebouncedValue(value);
+  }, delay);
+
+  return () => {
+   clearTimeout(handler);
+  };
+ }, [value, delay]);
+
+ return debouncedValue;
 }

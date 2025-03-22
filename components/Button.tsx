@@ -3,7 +3,7 @@ import { forwardRef } from "preact/compat";
 import { JSX } from "preact";
 import { cn } from "../lib/utils.ts";
 
-const buttonVariants = cva("rounded-md px-4 py-2 cursor-pointer font-medium duration-200 disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none", {
+export const buttonVariants = cva("rounded-md px-4 py-2 cursor-pointer font-medium duration-200 disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none", {
  variants: {
   variant: {
    primary: "bg-blue-500 text-white hover:bg-blue-600",

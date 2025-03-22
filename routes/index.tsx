@@ -1,5 +1,5 @@
 import { Header } from "../components/Header.tsx";
-import { Button } from "../components/Button.tsx";
+import { buttonVariants } from "../components/Button.tsx";
 import Preview from "../islands/Preview.tsx";
 import { FreshContext } from "$fresh/server.ts";
 
@@ -11,11 +11,11 @@ export default function Home(ctx: FreshContext) {
      <Header id="main">Discord Activity</Header>
      <p className="mt-2 text-lg text-neutral-400">API for displaying Discord activity data in JSON or SVG</p>
      <div className="mt-4 flex items-center justify-center gap-4">
-      <a href="/docs">
-       <Button variant="primary">Documentation</Button>
+      <a href="/docs" className={buttonVariants({ variant: "primary" })}>
+       Documentation
       </a>
-      <a href="/discord" target="_blank">
-       <Button variant="secondary">Join Discord</Button>
+      <a href="/discord" className={buttonVariants({ variant: "secondary" })} target="_blank">
+       Join Discord
       </a>
      </div>
     </div>

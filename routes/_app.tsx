@@ -50,7 +50,7 @@ export default function App({ Component }: PageProps) {
    <body className="min-h-screen w-full scroll-smooth bg-background selection:bg-neutral-800 selection:text-white! font-geist antialiased">
     <main className="mx-auto max-w-5xl">
      <Component />
-     {/* <div className="color-rays" /> */}
+     <div className="color-rays" />
     </main>
    </body>
   </html>

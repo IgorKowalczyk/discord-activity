@@ -38,14 +38,14 @@
 > [!IMPORTANT]
 > If you leave the Discord server, the bot will no longer be able to watch your profile and activities, so the user card will not be generated.
 
-Then, in your browser, **go to `https://discord-activity.deno.dev/api/:userId` and replace `:userId` with your Discord user ID**.
+Then, in your browser, **go to `https://activity.igorkowalczyk.dev/api/:userId` and replace `:userId` with your Discord user ID**.
 
 **You will be shown a user card with your presence and activities.** If you want to customize the appearance of the user card, you can do so by providing query parameters to the URL which are described in the [Customizations](#-customizations) section.
 
 > [!NOTE]
 > If you don't know your Discord user ID, go to your Discord settings, then to the "Advanced" tab, scroll down and enable "Developer Mode". Then right-click on your profile and click "Copy ID".
 >
-> You can also get raw user data in JSON format by going to `https://discord-activity.deno.dev/api/raw/:userId` and replacing `:userId` with your Discord user ID.
+> You can also get raw user data in JSON format by going to `https://activity.igorkowalczyk.dev/api/raw/:userId` and replacing `:userId` with your Discord user ID.
 
 ## 📚 API Endpoints
 
@@ -75,7 +75,7 @@ Then, in your browser, **go to `https://discord-activity.deno.dev/api/:userId` a
 **URL**
 
 ```http
-GET https://discord-activity.deno.dev/api/544164729354977282?bgColor=1b1c1e&borderRadius=0&idleMessage=I'm not doing anything&hideStatus=true
+GET https://activity.igorkowalczyk.dev/api/544164729354977282?bgColor=1b1c1e&borderRadius=0&idleMessage=I'm not doing anything&hideStatus=true
 ```
 
 **Query Parameters**

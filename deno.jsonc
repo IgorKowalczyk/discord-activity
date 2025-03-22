@@ -30,15 +30,13 @@
   "preact": "https://esm.sh/preact@10.22.0",
   "preact/": "https://esm.sh/preact@10.22.0/",
   "@preact/compat": "https://esm.sh/*@preact/compat@18.3.1",
-  "tailwind-merge": "npm:tailwind-merge@^2.5.5",
-  "tailwindcss": "npm:tailwindcss@3.4.16",
-  "tailwindcss/": "npm:/tailwindcss@3.4.16/",
-  "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js",
-  "tailwindcss/defaultTheme": "npm:/tailwindcss@3.4.16/defaultTheme.js",
-  "@discordeno/bot": "npm:@discordeno/bot@20.0.0",
-  "@discordeno/gateway": "npm:@discordeno/gateway@20.0.0",
+  "tailwind-merge": "npm:tailwind-merge@3.0.2",
+  "tailwindcss": "npm:tailwindcss@4.0.15",
+  "@pakornv/fresh-plugin-tailwindcss": "jsr:@pakornv/fresh-plugin-tailwindcss@1.0.2",
+  "@discordeno/bot": "npm:@discordeno/bot@21.0.0",
+  "@discordeno/gateway": "npm:@discordeno/gateway@21.0.0",
   "@std/dotenv": "jsr:@std/dotenv@0.225.3",
-  "zod": "npm:zod@3.24.1"
+  "zod": "npm:zod@3.24.2"
  },
  "compilerOptions": {
   "jsx": "react-jsx",

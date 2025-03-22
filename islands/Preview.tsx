@@ -1,5 +1,5 @@
 import { useState } from "preact/hooks";
-import { Button } from "../components/Button.tsx";
+import { Button, buttonVariants } from "../components/Button.tsx";
 import { Input } from "../components/Input.tsx";
 import { cn, useDebounce } from "../lib/utils.ts";
 
@@ -67,7 +67,7 @@ export default function Preview({ defaultUrl }: { defaultUrl: string }) {
       <button
        key={style.name}
        type="button"
-       className={`mb-2 mr-2 shrink-0 cursor-pointer rounded-md border border-neutral-800 p-4 w-full text-left text-white outline-hidden duration-200 md:w-full ${style.name === newStyle ? "bg-neutral-800/70" : "hover:bg-neutral-800/40"} `}
+       className={`mb-2 mr-2 shrink-0 cursor-pointer rounded-md border border-neutral-800 focus:bg-neutral-800 p-4 w-full text-left text-white outline-hidden duration-200 md:w-full ${style.name === newStyle ? "bg-neutral-800/70" : "hover:bg-neutral-800/40"} `}
        onClick={() => {
         setNewStyle(style.name);
         handleStyleChange(style.name);
@@ -121,8 +121,8 @@ export default function Preview({ defaultUrl }: { defaultUrl: string }) {
          </div>
         </div>
 
-        <a href={`${defaultUrl}/api/raw/${debouncedInput}`} target="_blank" rel="noopener noreferrer" className={cn("flex mt-4 duration-200", !debouncedInput && "opacity-0")}>
-         <Button variant="primary">Open in new tab</Button>
+        <a href={`${defaultUrl}/api/raw/${debouncedInput}`} target="_blank" rel="noopener noreferrer" className={cn(buttonVariants({ variant: "primary" }), "mt-4 flex w-fit", !debouncedInput && "opacity-0")}>
+         Open in new tab
         </a>
        </>
       )}

@@ -7,7 +7,7 @@ export const base64ImageFetcher = async (url: string) => {
   const buffer = await blob.arrayBuffer();
   const binary = new Uint8Array(buffer).reduce((data, byte) => data + String.fromCharCode(byte), "");
   return `data:${blob.type};base64,${btoa(binary)}`;
- } catch (e) {
-  throw new Error(`Failed to fetch image: ${e}`);
+ } catch {
+  return "";
  }
 };

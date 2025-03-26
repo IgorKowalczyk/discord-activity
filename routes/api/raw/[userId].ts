@@ -1,9 +1,9 @@
 import { FreshContext } from "$fresh/server.ts";
-import { bot } from "../../../bot.ts";
 import { fetchUserPresences } from "../../../lib/fetchUserPresences.ts";
 import { discordUserId } from "../../../lib/schemas.ts";
 import { getUserData } from "../../../lib/getUserData.ts";
 import { throwJsonError } from "../../../lib/errors.ts";
+import { apiLogger } from "../../../lib/logger.ts";
 
 export const handler = {
  async GET(_req: Request, { params }: FreshContext) {
@@ -22,7 +22,7 @@ export const handler = {
     },
    });
   } catch (err) {
-   bot.logger.error(err);
+   apiLogger.error(err);
    return throwJsonError(500, "Something went wrong while fetching the user data!");
   }
  },

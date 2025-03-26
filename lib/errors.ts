@@ -1,9 +1,7 @@
+import type { StatusCode } from "https://deno.land/std@0.216.0/http/status.ts";
 import { generateErrorCard } from "./generateCard.ts";
 
-/**
- * Throws a JSON error response.
- */
-export function throwJsonError(code?: number, error?: string) {
+export function throwJsonError(code?: StatusCode, error?: string) {
  return new Response(JSON.stringify({ error: error || "Internal Server Error", status: code || 500 }), {
   status: code || 500,
   headers: {
@@ -12,10 +10,7 @@ export function throwJsonError(code?: number, error?: string) {
  });
 }
 
-/**
- * Throws an image error response.
- */
-export function throwImageError(code?: number, error?: string) {
+export function throwImageError(code?: StatusCode, error?: string) {
  const card = generateErrorCard(error);
 
  return new Response(card, {

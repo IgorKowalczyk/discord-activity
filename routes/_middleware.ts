@@ -1,5 +1,5 @@
 import { FreshContext } from "$fresh/server.ts";
-import { bot } from "../bot.ts";
+import { apiLogger } from "../lib/logger.ts";
 
 export async function handler(
  req: Request,
@@ -24,6 +24,6 @@ export async function handler(
  resp.headers.set("Pragma", "no-cache");
  resp.headers.set("Expires", "0");
 
- bot.logger.info(`${req.method} ${req.url} - ${(performance.now() - time).toFixed(2)}ms`);
+ apiLogger.info(`${req.method} ${req.url} - ${(performance.now() - time).toFixed(2)}ms`);
  return resp;
 }

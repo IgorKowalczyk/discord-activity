@@ -1,10 +1,10 @@
 import { FreshContext } from "$fresh/server.ts";
-import { bot } from "../../bot.ts";
 import { fetchUserPresences } from "../../lib/fetchUserPresences.ts";
 import { cardOptions, discordUserId } from "../../lib/schemas.ts";
 import { getUserData } from "../../lib/getUserData.ts";
 import { throwImageError } from "../../lib/errors.ts";
 import { generateCard } from "../../lib/generateCard.ts";
+import { apiLogger } from "../../lib/logger.ts";
 
 export const handler = {
  async GET(req: Request, { params }: FreshContext) {
@@ -30,7 +30,7 @@ export const handler = {
     },
    });
   } catch (error) {
-   bot.logger.error(error);
+   apiLogger.error(error);
    return throwImageError(500, "Something went wrong while generating the user card!");
   }
  },

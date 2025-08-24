@@ -1,13 +1,13 @@
-import { FreshContext } from "$fresh/server.ts";
 import { fetchUserPresences } from "../../lib/fetchUserPresences.ts";
 import { cardOptions, discordUserId } from "../../lib/schemas.ts";
 import { getUserData } from "../../lib/getUserData.ts";
 import { throwImageError } from "../../lib/errors.ts";
 import { generateCard } from "../../lib/generateCard.ts";
 import { apiLogger } from "../../lib/logger.ts";
+import { define } from "../../utils.ts";
 
-export const handler = {
- async GET(req: Request, { params }: FreshContext) {
+export const handler = define.handlers({
+ async GET({ params, req }) {
   try {
    const id = params.userId;
    const url = new URL(req.url);
@@ -34,4 +34,4 @@ export const handler = {
    return throwImageError(500, "Something went wrong while generating the user card!");
   }
  },
-};
+});

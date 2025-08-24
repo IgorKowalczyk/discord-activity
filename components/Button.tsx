@@ -17,6 +17,7 @@ export const buttonVariants = cva("rounded-md px-4 py-2 cursor-pointer font-medi
 
 interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
  variant?: VariantProps<typeof buttonVariants>["variant"];
+ disabled?: boolean;
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(({ variant, className, children, ...props }, ref) => {

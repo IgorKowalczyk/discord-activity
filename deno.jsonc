@@ -1,46 +1,35 @@
 {
  "$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
  "tasks": {
+  //
   "dev": "deno run -A --watch dev.ts",
   "start": "deno run -A --watch=static/,routes/ dev.ts",
-  "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
+  "check": "deno fmt --check && deno lint && deno check",
   "build": "BUILD=true deno run -A dev.ts build",
-  "preview": "deno run -A server.ts",
-  "update": "deno run -A -r https://fresh.deno.dev/update ."
+  "preview": "deno serve -A _fresh/server.js",
+  "update": "deno run -A -r jsr:@fresh/update ."
  },
- "lint": {
-  "include": ["."],
-  "rules": {
-   "tags": ["fresh", "recommended"]
-  }
- },
- "fmt": {
-  "include": ["."],
-  "useTabs": false,
-  "lineWidth": 2000,
-  "indentWidth": 1,
-  "singleQuote": false,
-  "proseWrap": "preserve"
- },
+ "lint": { "include": ["."], "rules": { "tags": ["fresh", "recommended"] } },
+ "fmt": { "include": ["."], "useTabs": false, "lineWidth": 2000, "indentWidth": 1, "singleQuote": false, "proseWrap": "preserve" },
  "exclude": ["**/_fresh/*"],
  "imports": {
-  "$fresh/": "https://deno.land/x/fresh@1.7.3/",
+  "@fresh/plugin-tailwind": "jsr:@fresh/plugin-tailwind@^0.0.1-alpha.9",
   "class-variance-authority": "npm:class-variance-authority@0.7.1",
   "clsx": "npm:clsx@2.1.1",
-  "preact": "https://esm.sh/preact@10.22.0",
-  "preact/": "https://esm.sh/preact@10.22.0/",
-  "@preact/compat": "https://esm.sh/*@preact/compat@18.3.1",
-  "tailwind-merge": "npm:tailwind-merge@3.0.2",
-  "tailwindcss": "npm:tailwindcss@4.0.17",
-  "@pakornv/fresh-plugin-tailwindcss": "jsr:@pakornv/fresh-plugin-tailwindcss@1.0.2",
+  "preact": "npm:preact@10.27.1",
+  "tailwind-merge": "npm:tailwind-merge@3.3.1",
+  "tailwindcss": "npm:tailwindcss@4.1.12",
   "@discordeno/bot": "npm:@discordeno/bot@21.0.0",
   "@discordeno/gateway": "npm:@discordeno/gateway@21.0.0",
-  "@std/dotenv": "jsr:@std/dotenv@0.225.3",
-  "zod": "npm:zod@3.24.2"
+  "@std/dotenv": "jsr:@std/dotenv@0.225.5",
+  "zod": "npm:zod@4.1.1",
+  "fresh": "jsr:@fresh/core@^2.0.0-alpha.60"
  },
  "compilerOptions": {
-  "jsx": "react-jsx",
-  "jsxImportSource": "preact"
+  "jsx": "precompile",
+  "jsxImportSource": "preact",
+  "jsxPrecompileSkipElements": ["a", "img", "source", "body", "html", "head"],
+  "lib": ["dom", "dom.asynciterable", "dom.iterable", "deno.ns"]
  },
  "nodeModulesDir": "auto"
 }

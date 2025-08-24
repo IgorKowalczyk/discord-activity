@@ -7,7 +7,7 @@
 }
 
 @layer base {
-* {
+ * {
   @apply box-border outline-offset-2;
   scrollbar-color: #161617 transparent;
   scrollbar-width: thin;
@@ -19,7 +19,7 @@
 }
 
 @layer components {
-.color-rays {
+ .color-rays {
   @apply pointer-events-none absolute inset-0 bg-no-repeat opacity-30;
   background-size: 1589px 383px;
   display: var(--hidden);

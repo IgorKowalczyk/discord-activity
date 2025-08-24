@@ -7,7 +7,7 @@
   "check": "deno fmt --check && deno lint && deno check",
   "build": "BUILD=true deno run -A dev.ts build",
   "preview": "deno serve -A _fresh/server.js",
-  "update": "deno run -A -r jsr:@fresh/update .",
+  "update": "deno run -A -r jsr:@fresh/update ."
  },
  "lint": { "include": ["."], "rules": { "tags": ["fresh", "recommended"] } },
  "fmt": { "include": ["."], "useTabs": false, "lineWidth": 2000, "indentWidth": 1, "singleQuote": false, "proseWrap": "preserve" },
@@ -23,13 +23,13 @@
   "@discordeno/gateway": "npm:@discordeno/gateway@21.0.0",
   "@std/dotenv": "jsr:@std/dotenv@0.225.5",
   "zod": "npm:zod@4.1.1",
-  "fresh": "jsr:@fresh/core@^2.0.0-alpha.60",
+  "fresh": "jsr:@fresh/core@^2.0.0-alpha.60"
  },
  "compilerOptions": {
   "jsx": "precompile",
   "jsxImportSource": "preact",
   "jsxPrecompileSkipElements": ["a", "img", "source", "body", "html", "head"],
-  "lib": ["dom", "dom.asynciterable", "dom.iterable", "deno.ns"],
+  "lib": ["dom", "dom.asynciterable", "dom.iterable", "deno.ns"]
  },
- "nodeModulesDir": "auto",
+ "nodeModulesDir": "auto"
 }

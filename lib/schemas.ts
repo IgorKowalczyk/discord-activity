@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { User as DiscordUser } from "@discordeno/bot";
-import type { DiscordActivity, DiscordPresenceUpdate } from "npm:@discordeno/types@20.0.0";
+import type { DiscordActivity, DiscordClientStatus } from "npm:@discordeno/types@20.0.0";
 
 export const discordUserId = z.string().regex(/^\d{17,19}$/);
 
@@ -56,11 +56,7 @@ export interface User {
  discriminator: DiscordUser["discriminator"];
  publicFlags: DiscordUser["publicFlags"];
  badges: string[];
- status: {
-  desktop: DiscordPresenceUpdate["client_status"]["desktop"];
-  mobile: DiscordPresenceUpdate["client_status"]["mobile"];
-  web: DiscordPresenceUpdate["client_status"]["web"];
- };
+ status: DiscordClientStatus;
  customStatus: {
   image: string | null;
   state: string | null;

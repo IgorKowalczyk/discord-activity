@@ -47,10 +47,6 @@ export const bot = createBot({
  },
 });
 
-if (Deno.env.get("BUILD") === "true") {
- bot.logger.info("Not starting the bot as this is a build environment.");
-} else {
- await bot.start();
-}
+await bot.start();
 
 addDesiredProperties(bot);

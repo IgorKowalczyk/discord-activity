@@ -1,4 +1,4 @@
-import { type PageProps } from "$fresh/server.ts";
+import { type PageProps } from "fresh";
 
 export default function App({ Component }: PageProps) {
  return (
@@ -15,8 +15,8 @@ export default function App({ Component }: PageProps) {
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="white" />
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
@@ -47,7 +47,7 @@ export default function App({ Component }: PageProps) {
 
     <link rel="stylesheet" href="/style.css" />
    </head>
-   <body className="min-h-screen w-full scroll-smooth bg-background selection:bg-neutral-800 selection:text-white! font-geist antialiased">
+   <body className="min-h-screen w-full scroll-smooth bg-[#121212] selection:bg-neutral-800 selection:text-white! font-geist antialiased">
     <main className="mx-auto max-w-5xl">
      <Component />
      <div className="color-rays" />

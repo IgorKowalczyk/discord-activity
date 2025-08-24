@@ -57,7 +57,7 @@ export default function Preview({ defaultUrl }: { defaultUrl: string }) {
 
  return (
   <div className="grid grid-cols-1 md:grid-cols-5">
-   <div className="sticky flex w-full flex-col border-b border-neutral-800 bg-background p-6 md:col-span-2 md:border-b-0 md:border-r">
+   <div className="sticky flex w-full flex-col border-b border-neutral-800 bg-[#121212] p-6 md:col-span-2 md:border-b-0 md:border-r">
     <div className="mb-2 ">
      <h3 className="mb-1 font-medium text-neutral-400">Discord ID:</h3>
      <Input id="input" placeholder="544164729354977282" type="text" value={input} onInput={(e) => setInput((e.target as HTMLInputElement).value)} />
@@ -90,18 +90,18 @@ export default function Preview({ defaultUrl }: { defaultUrl: string }) {
         <div className="relative flex flex-row gap-2 overflow-hidden rounded-lg bg-neutral-800 p-4">
          <pre className="overflow-hidden whitespace-nowrap font-mono text-sm text-white">
          <code>
-          {defaultUrl}/api/{debouncedInput || ""}
+          {defaultUrl}api/{debouncedInput || ""}
          </code>
          </pre>
          <div className="absolute right-0 top-0 flex h-full items-center bg-linear-to-r from-transparent via-neutral-800 to-neutral-800 p-2 pl-8">
-          <Button variant="secondary" onClick={() => handleCopy(`${defaultUrl}/api/${debouncedInput}`)} disabled={!input} className="relative py-4 size-6">
+          <Button variant="secondary" onClick={() => handleCopy(`${defaultUrl}api/${debouncedInput}`)} disabled={!input} className="relative py-4 size-6">
            <Clipboard className={cn("size-4 mx-auto mt-2 inset-0 absolute transition duration-200", animateCopy && "opacity-0")} />
            <ClipboardCheck className={cn("size-4 mx-auto mt-2 inset-0 absolute transition-acity duration-200", !animateCopy && "opacity-0 ")} />
           </Button>
          </div>
         </div>
         <h3 className="mb-1 mt-6 font-medium text-neutral-400">Preview:</h3>
-        {debouncedInput ? <img src={`${defaultUrl}/api/${debouncedInput}`} alt="Card" className="w-[408px] h-[197px]" /> : <img src="/example.png" alt="Example card" className="w-[408px] h-[197px]" />}
+        {debouncedInput ? <img src={`${defaultUrl}api/${debouncedInput}`} alt="Card" className="w-[408px] h-[197px]" /> : <img src="/example.png" alt="Example card" className="w-[408px] h-[197px]" />}
        </>
       )
       : (
@@ -110,18 +110,18 @@ export default function Preview({ defaultUrl }: { defaultUrl: string }) {
         <div className="relative flex flex-row gap-2 overflow-hidden rounded-lg bg-neutral-800 p-4">
          <pre className="overflow-hidden whitespace-nowrap font-mono text-sm text-white">
          <code>
-          {defaultUrl}/api/raw/{debouncedInput}
+          {defaultUrl}api/raw/{debouncedInput}
          </code>
          </pre>
          <div className="absolute right-0 top-0 flex h-full items-center bg-linear-to-r from-transparent via-neutral-800 to-neutral-800 p-2 pl-8">
-          <Button variant="secondary" onClick={() => handleCopy(`${defaultUrl}/api/raw/${debouncedInput}`)} disabled={!input} className="relative py-4 size-6">
+          <Button variant="secondary" onClick={() => handleCopy(`${defaultUrl}api/raw/${debouncedInput}`)} disabled={!input} className="relative py-4 size-6">
            <Clipboard className={cn("size-4 mx-auto mt-2 inset-0 absolute transition duration-200", animateCopy && "opacity-0")} />
            <ClipboardCheck className={cn("size-4 mx-auto mt-2 inset-0 absolute transition-acity duration-200", !animateCopy && "opacity-0 ")} />
           </Button>
          </div>
         </div>
 
-        <a href={`${defaultUrl}/api/raw/${debouncedInput}`} target="_blank" rel="noopener noreferrer" className={cn(buttonVariants({ variant: "primary" }), "mt-4 flex w-fit", !debouncedInput && "opacity-0")}>
+        <a href={`${defaultUrl}api/raw/${debouncedInput}`} target="_blank" rel="noopener noreferrer" className={cn(buttonVariants({ variant: "primary" }), "mt-4 flex w-fit", !debouncedInput && "opacity-0")}>
          Open in new tab
         </a>
        </>

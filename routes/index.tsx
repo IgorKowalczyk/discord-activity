@@ -1,9 +1,10 @@
 import { Header } from "../components/Header.tsx";
 import { buttonVariants } from "../components/Button.tsx";
 import Preview from "../islands/Preview.tsx";
-import { FreshContext } from "$fresh/server.ts";
+import { define } from "../utils.ts";
+import { PageProps } from "fresh";
 
-export default function Home(ctx: FreshContext) {
+export default define.page((props: PageProps) => {
  return (
   <>
    <section className="relative grid w-full grid-cols-1 gap-x-4 overflow-hidden border-x border-b border-neutral-800 p-6 lg:grid-cols-2 lg:p-12">
@@ -32,8 +33,8 @@ export default function Home(ctx: FreshContext) {
     </div>
    </section>
    <section className="border-x border-b border-neutral-800" id="preview">
-    <Preview defaultUrl={ctx.url.origin} />
+    <Preview defaultUrl={props.url.toString()} />
    </section>
   </>
  );
-}
+});

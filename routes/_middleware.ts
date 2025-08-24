@@ -1,11 +1,8 @@
-import { FreshContext } from "$fresh/server.ts";
+import { define } from "../utils.ts";
 import { apiLogger } from "../lib/logger.ts";
 
-export async function handler(
- req: Request,
- ctx: FreshContext,
-) {
- const url = new URL(req.url);
+export default define.middleware(async (ctx) => {
+ const url = new URL(ctx.url);
 
  if (url.pathname.startsWith("/docs")) {
   return Response.redirect("https://github.com/igorkowalczyk/discord-activity?tab=readme-ov-file#-getting-started");
@@ -24,6 +21,6 @@ export async function handler(
  resp.headers.set("Pragma", "no-cache");
  resp.headers.set("Expires", "0");
 
- apiLogger.info(`${req.method} ${req.url} - ${(performance.now() - time).toFixed(2)}ms`);
+ apiLogger.info(`${ctx.req.method} ${ctx.req.url} - ${(performance.now() - time).toFixed(2)}ms`);
  return resp;
-}
+});

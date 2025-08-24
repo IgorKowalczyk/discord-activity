@@ -1,12 +1,12 @@
-import { FreshContext } from "$fresh/server.ts";
 import { fetchUserPresences } from "../../../lib/fetchUserPresences.ts";
 import { discordUserId } from "../../../lib/schemas.ts";
 import { getUserData } from "../../../lib/getUserData.ts";
 import { throwJsonError } from "../../../lib/errors.ts";
 import { apiLogger } from "../../../lib/logger.ts";
+import { define } from "../../../utils.ts";
 
-export const handler = {
- async GET(_req: Request, { params }: FreshContext) {
+export const handler = define.handlers({
+ async GET({ params }) {
   try {
    const id = params.userId;
    if (!discordUserId.safeParse(id).success) return throwJsonError(400, "Please provide a valid user ID!");
@@ -26,4 +26,4 @@ export const handler = {
    return throwJsonError(500, "Something went wrong while fetching the user data!");
   }
  },
-};
+});

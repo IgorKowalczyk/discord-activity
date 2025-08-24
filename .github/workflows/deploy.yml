@@ -27,5 +27,5 @@ jobs:
      uses: denoland/deployctl@v1
      with:
       project: "discord-activity"
-      entrypoint: "server.ts"
+      entrypoint: "main.ts"
       root: "."
